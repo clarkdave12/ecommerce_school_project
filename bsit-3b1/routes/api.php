@@ -17,5 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/* For Admin */
+Route::resource('/categories', 'CategoriesController');
+
+/* Others */
 Route::post('/register', 'AppController@register');
 Route::get('/user-role/{id}', 'AppController@getUserRole');

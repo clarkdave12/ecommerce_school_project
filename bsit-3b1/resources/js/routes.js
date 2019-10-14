@@ -1,6 +1,8 @@
 /* Admin views */
 import Dashboard from './admin/Dashboard.vue';
-
+import AdminCategories from './admin/pages/Categories.vue';
+import AdminProducts from './admin/pages/Products.vue';
+import AdminUsers from './admin/pages/Users.vue';
 
 import Home from './pages/Home.vue';
 import Register from './pages/Register.vue';
@@ -13,7 +15,20 @@ export const routes = [
         path: '/admin',
         component: Dashboard
     },
+    {
+        path: '/admin/users',
+        component: AdminUsers
+    },
+    {
+        path: '/admin/categories',
+        component: AdminCategories
+    },
+    {
+        path: '/admin/products',
+        component: AdminProducts
+    },
 
+    /* Other Routes */
     {
         path: '/',
         component: LandingPage
