@@ -35,4 +35,10 @@ class AppController extends Controller
 
         return $user->role->name;
     }
+
+    public function getUserList() {
+        $user = User::orderBy('created_at', 'desc')->get();
+
+        return response()->json(['users' => $user], 200);
+    }
 }

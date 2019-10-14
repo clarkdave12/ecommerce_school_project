@@ -4,8 +4,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import axios from 'axios';
 import {routes} from './routes';
-import {registerURL, loginURL, userRoleURL, userURL, getHeader, categoryURL} from './api';
+import {registerURL, loginURL, userRoleURL, userURL, getHeader, categoryURL, getUserURL} from './api';
 
+window.getUserURL = getUserURL;
 window.categoryURL = categoryURL;
 window.getHeader = getHeader;
 window.userURL = userURL;
