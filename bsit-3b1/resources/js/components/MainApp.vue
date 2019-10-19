@@ -1,13 +1,9 @@
 <template>
-    <div>
-        <div v-if="! isAdmin">
+    <div class="container-fluid" id="bg">
+
+        <div>
             <Navbar />
         </div>
-
-        <div v-if="isAdmin">
-            <adminNavbar />
-        </div>
-
         <router-view></router-view>
     </div>
 </template>
@@ -15,22 +11,30 @@
 <script>
 
 import Navbar from './inc/Navbar.vue'
-import adminNavbar from '../admin/AdminNavbar.vue'
 
 export default {
     components: {
         Navbar,
-        adminNavbar
-    },
-
-    data () {
-        return {
-            isAdmin: true,
-        }
-    },
-
-    mounted() {
-        console.log('Component mounted.')
     }
 }
 </script>
+
+<style>
+
+    
+    @font-face {
+        font-family: 'batmfa';
+        src: url('../fonts/batmfa.ttf');
+    }
+
+    @font-face {
+        font-family: 'batmfo';
+        src: url('../fonts/batmfo.ttf');
+    }
+
+    #bg {
+        background: url('../img/metal-bg.jpg');
+        min-height: 100vh;
+    }
+
+</style>

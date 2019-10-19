@@ -8,7 +8,6 @@
         <link rel="stylesheet" href=" {{ asset('css/app.css') }} ">
     </head>
     <body>
-        
         <div id="app">
             <main-app></main-app>
         </div>

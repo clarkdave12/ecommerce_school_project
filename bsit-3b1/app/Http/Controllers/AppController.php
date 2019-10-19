@@ -13,6 +13,14 @@ class AppController extends Controller
 
     public function register(Request $request) {
 
+        $this->validate($request, [
+            'first_name' => 'required|max:30',
+            'last_name' => 'required|max:30',
+            'address' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
+
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -39,6 +47,6 @@ class AppController extends Controller
     public function getUserList() {
         $user = User::orderBy('created_at', 'desc')->get();
 
-        return response()->json(['users' => $user], 200);
+        return response()->json(['users' => $user], 200); 
     }
 }

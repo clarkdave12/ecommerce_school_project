@@ -34,8 +34,6 @@ export default {
     data () {
         return {
             users: [],
-
-
         }
     },
 
@@ -48,7 +46,6 @@ export default {
             axios.get(getUserURL)
                 .then(response =>{
                     this.users = response.data.users
-                    console.log(this.users);
                 })
                 .catch(error => {
                     console.log(error)
