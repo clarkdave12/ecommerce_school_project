@@ -5,9 +5,12 @@ import VueRouter from 'vue-router';
 import axios from 'axios';
 import {routes} from './routes';
 import {registerURL, loginURL, userRoleURL, userURL, getHeader,
-        categoryURL,productURL, getUserURL, feedbackURL, cartURL} from './api';
+        categoryURL,productURL, getUserURL, feedbackURL, cartURL,
+        getAccessToken, isAuthenticated} from './api';
 
 
+window.isAuthenticated = isAuthenticated;
+window.getAccessToken = getAccessToken;
 window.cartURL = cartURL;
 window.feedbackURL = feedbackURL;
 window.productURL = productURL;
@@ -34,34 +37,53 @@ router.beforeEach(
     (to, from, next) => {
         /* Navigation Guard for Guest */
         if(to.matched.some(record => record.meta.forGuest)) {
-            if(window.localStorage.getItem('role') == 'User') {
-                next({ path: '/home' })
-            }
-            else if(window.localStorage.getItem('role') == 'Admin') {
-                next({ path: '/admin' })
-            }
-            else { next() }
+            axios.get(userURL, {headers: getHeader()})
+                .then(response => {
+                    
+                    next({ path: '/products' })
+                })
+                .catch(error => {
+                    
+                    next()
+                })
         }
         else { next() }
 
         /* Navigation Guard for User */
         if(to.matched.some(record => record.meta.forUser)) {
-            if(window.localStorage.getItem('role') != 'User') {
-                next({ path: '/login' })
-            }
-            else { next() }
+            axios.get(userURL, {headers: getHeader()})
+                .then(response => {
+                    next()
+                })
+                .catch(error => {
+                    next({ path: '/login' })
+                })
         }
         else { next() }
 
         /* Navigation Guard for Admin */
         if(to.matched.some(record => record.meta.forAdmin)) {
-            if(window.localStorage.getItem('role') != 'Admin') {
-                next({ path: '/login' })
-            }
-            else if(window.localStorage.getItem('role') == 'User') {
-                from()
-            }
-            else { next() }
+            axios.get(userURL, {headers: getHeader()})
+                .then(response => {
+                    axios.get(userRoleURL + '/' + response.data.id)
+                        .then(response => {
+                            if(response.data == 'User') {
+                                next({ path: '/products' })
+                            }
+                            else if(response.data == 'Admin') {
+                                next()
+                            }
+                            else {
+                                next({ path: '/login' })
+                            }
+                        })
+                        .catch(error => {
+                            next({ path: '/login' })
+                        })
+                })
+                .catch(error => {
+                    next({ path: '/login' })
+                })
         }
         else { next() }
     }

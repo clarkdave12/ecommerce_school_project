@@ -12,7 +12,11 @@
                         <h3 class="control-title"> Add Category </h3>
                         <input v-model="category.name" type="text" class="my-3 inputs" placeholder="Category name">
 
-                        <button type="submit" class="btn btn-success mt-3">Create</button>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-12">
+                                <button id="add-btn" type="submit" class="btn btn-success mt-3">Create</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
 
@@ -22,33 +26,31 @@
                         <h3 class="control-title"> Update Category </h3>
                         <input v-model="update.name" type="text" class="inputs" placeholder="New Category name">
 
-                        <button type="submit" class="btn btn-success mt-3">Update</button>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <button type="submit" class="btn btn-success mt-3" id="update-btn">Update</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
 
             <div class="col-lg-6">
                 <!-- Category List -->
-                <div>
-                    <table class="table">
-                        <thead id="table-bar">
-                            <tr>
-                                <th class="table-title">Category</th>
-                                <th class="table-title">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="cat in categories" :key="cat.id">
-                                <td class="table-data"> {{ cat.name }} </td>
-                                <td>
-                                    <div id="table-actions" class="row">
-                                        <div> <button @click="forUpdate(cat.id, cat.name)" class="btn btn-warning"> Edit </button> </div>
-                                        <div> <button @click="deleteCategory(cat.id)" class="btn btn-danger ml-3"> Delete </button> </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row my-3" v-for="cat in categories" :key="cat.id">
+                    <div class="col-lg-6 py-2">
+                        <h3 class="category-name"> {{ cat.name }} </h3>
+                    </div>
+                    <div class="col-lg-6">
+                        <div id="table-actions" class="row">
+                            <div class="col-lg-6 py-2">
+                                <div> <button @click="forUpdate(cat.id, cat.name)" class="btn btn-warning btn-controls"> Edit </button> </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12 py-2">
+                                <button @click="deleteCategory(cat.id)" class="btn btn-danger btn-controls"> Delete </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,12 +115,11 @@ export default {
             axios.put(categoryURL + '/' + this.update.id, this.update)
                 .then(response => {
                     console.log(response)
-                    this.update = []
                     this.isUpdating = false
                     bus.$emit('category-show')
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log(error.response)
                 })
         },
 
@@ -188,9 +189,24 @@ export default {
         letter-spacing: 1px;
         font-weight: 300;
         text-align: center;
+        max-width: 50%;
     }
 
     #table-actions {
         justify-content: center;
+    }
+
+    #add-btn {
+        width: 100%;
+    }
+
+    .btn-controls {
+        width: 100%;
+    }
+
+    .category-name {
+        text-transform: uppercase;
+        color: #ffffff;
+        overflow-wrap: break-word;
     }
 </style>

@@ -13,5 +13,12 @@
         </div>
 
         <script src=" {{ asset('js/app.js') }} "></script>
+
+        <script>
+            
+$('.js-scroll-trigger').click(function() {
+    $('.navbar-collapse').collapse('hide');
+});
+        </script>
     </body>
 </html>

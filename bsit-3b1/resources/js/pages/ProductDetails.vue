@@ -1,22 +1,22 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6" id="product-image">
+    <div class="container-fluid">
+        <div class="row mt-5">
+            <div class="col-lg-6 col-sm-12 mb-5" id="product-image">
                 <img :src="'http://localhost:8000/' + product.image" alt="">
                 
                 <div class="row mt-3">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 col-sm-12 mb-3">
                         <form>
                             <input id="quantity" v-model="quantity" type="number" class="form-control" placeholder="Quantity">
                         </form>
                     </div>
-                    <div class="col-lg-6">
-                        <button @click.prevent="order()" class="btn btn-success">Add to Cart</button>
+                    <div class="col-lg-6 col-sm-12 mb-5">
+                        <button @click.prevent="order()" class="btn btn-success">Add to Cart</button >
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6 px-5 py-2" id="details">
+            <div class="col-lg-6 col-sm-12" id="details">
                 <div class="mb-3" id="head">
                     <h3> {{ product.name }} </h3>
                 </div>
@@ -138,11 +138,15 @@ export default {
 
     }
 
+    #details {
+        overflow-wrap: break-word;
+    }
+
     #details #head h3{
         font-family: 'batmfa';
-        font-size: 2.5em;
+        font-size: 1.8em;
+        overflow: wrap;
         font-weight: 600;
-        letter-spacing: 8px;
     }
 
     #product-image img{

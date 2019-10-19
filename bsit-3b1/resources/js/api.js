@@ -11,7 +11,8 @@ export const feedbackURL = apiDomain + 'api/feedbacks';
 export const cartURL = apiDomain + 'api/carts';
 
 export const getHeader = function () {
-    const token = window.localStorage.getItem('token');
+    
+    const token = getAccessToken()
 
     const headers = {
         'Accept': 'application/json',
@@ -19,4 +20,35 @@ export const getHeader = function () {
     }
 
     return headers
+}
+
+export const getAccessToken = function () {
+
+    const name = 'access_token=';
+    const ca = document.cookie.split(';');
+
+    for(let i = 0; i < ca.length; i++) {
+        const c = ca[i];
+
+        while(c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+
+        if(c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+
+    }
+    return "";
+}
+
+export const isAuthenticated = function () {
+    axios.get(userURL, {headers: getHeader()})
+        .then(response => {
+            return true
+        })
+        .catch(error => {
+            
+            return false
+        })
 }

@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
-        <div class="row">
+    <div class="container mt-2">
+        <div class="row mt-5">
             <div class="col-lg-3"></div>
 
-            <div class="form-group px-5 py-3 col-lg-6" id="box">
+            <div class="form-group pl-2 pr-3 py-3 col-lg-6 col-sm-12" id="box">
                 <div class="mb-3">
                     <header>Login</header>
                 </div>
@@ -15,7 +15,11 @@
 
                     <input placeholder="Password" type="password" class="inp mb-5" v-model="user.password">
 
-                    <button type="submit" class="btn btn-success">Login</button>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-12">
+                            <button type="submit" class="btn btn-success" id="mybtn">Login</button>
+                        </div>
+                    </div>
                 </form>
             </div>
 
@@ -32,15 +36,32 @@ export default {
                 email: '',
                 password: ''
             },
-
             errorMessage: ''
         }
     },
 
+    mounted () {
+        axios.get(userURL, {headers: getHeader()})
+            .then(response => {
+                this.getUserRole(response.data.id)
+            })
+            .catch(error => {
+                
+            })
+
+        bus.$on('login', () => {
+            axios.get(userURL, {headers: getHeader()})
+            .then(response => {
+                this.getUserRole(response.data.id)
+            })
+            .catch(error => {
+                
+            })
+        })
+    },
+
     methods: {
         login() {
-
-            console.log(this.user)
 
             var data = {
                 client_id: 2,
@@ -52,38 +73,36 @@ export default {
 
             axios.post(loginURL, data)
                 .then(response => {
-                    window.localStorage.setItem('token', response.data.access_token)
-                    
-                    axios.get(userURL, {headers: getHeader()})
-                        .then(response => {
-                            window.localStorage.setItem('id', response.data.id)
-                            window.localStorage.setItem('name', response.data.first_name + ' ' + response.data.last_name)
-                            window.localStorage.setItem('address', response.data.address)
-                            window.localStorage.setItem('email', response.data.email)
+                   
+                   const access_token = response.data.access_token;
+                   const expires_in = response.data.expires_in;
+                   const d = new Date();
+                   d.setTime(d.getTime() + (200 * 24 * 60 * 60 * 1000));
+                   const expires = d.toUTCString();
 
-                            axios.get(userRoleURL + '/' + window.localStorage.getItem('id'))
-                                .then(response => {
-                                    bus.$emit('login')
-                                    if('User' == response.data) {
-                                        window.localStorage.setItem('role', response.data)
-                                        this.$router.push('/products')
-                                    }
-                                    else if('Admin' == response.data) {
-                                        window.localStorage.setItem('role', response.data)
-                                        this.$router.push('/admin')
-                                    }
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                })
-                        })
+                   document.cookie = 'access_token=' + access_token + ';' + 'expires=' + expires + ';path=/';
+                   bus.$emit('login')
+                   
                 })
                 .catch(error => {
                     this.errorMessage = 'The Email or Password is incorrect'
                 })
         },
 
-
+        getUserRole (id) {
+            axios.get(userRoleURL + '/' + id)
+                .then(response => {
+                    if(response.data == 'Admin') {
+                        this.$router.push('/admin')
+                    }
+                    else if(response.data == 'User') {
+                        this.$router.push('/products')
+                    }
+                })
+                .catch(error => {
+                    
+                })
+        }
     }
     
 }
@@ -98,9 +117,8 @@ export default {
 
 header {
     font-family: 'batmfa';
-    color: red;
-    font-size: 2.5em;
-    letter-spacing: 10px;
+    color: #ffffff;
+    font-size: 1.8em;
 }
 
 input {
@@ -124,6 +142,10 @@ input:focus {
 
 .error {
     color: #f0e130;
+}
+
+#mybtn {
+    width: 100%;
 }
 
 </style>

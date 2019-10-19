@@ -10,11 +10,11 @@
                     </p>
                 </div>
                 
-                <button class="btn btn-lg mt-5 mb-5" id="myButton">See more of our Best Seller</button>
+                <button class="btn btn-lg mt-5 mb-5" id="myButton">See more of our Products</button>
             </div>
 
             <div class="col-lg-7 col-sm-12 mt-3" id="rightside">
-                
+                <img src="http://localhost:8000/images/mod-bg.jpg" alt="">
             </div>
         </div>
         
@@ -30,15 +30,13 @@
     font-weight: 700;
     font-size: 2em;
     min-width: 80%;
-    border-radius: 0;
-    border-bottom-left-radius: 50px 70px;
+    text-transform: uppercase;
+    font-family: 'batmfa';
 }
 
-#rightside {
-    min-height: 50%;
-    background: url('../img/mod-bg.jpg');
-    background-size: cover;
-    background-position: center;
+img {
+    width: 100%;
+    height: 80%;
 }
 
 h1 {

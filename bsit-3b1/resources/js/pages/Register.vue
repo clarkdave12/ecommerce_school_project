@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2"></div>
+    <div class="container mt-2">
+        <div class="row mt-5">
+            <div class="col-lg-2 col-sm-0"></div>
 
-                <div class="form-group px-5 py-3 col-lg-8" id="box">
+                <div class="form-group pl-2 pr-3 py-3 col-lg-8 col-sm-12" id="box">
                 <div class="mb-5">
                     <header>Create new Account</header>
                 </div>
@@ -38,10 +38,14 @@
                             <span class="confirmError" v-if="confirmError"> {{ confirmError }} </span>
                         </div>
 
-                        <button type="submit" class="btn btn-primary mb-3">Register</button>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-12">
+                                <button type="submit" class="btn btn-primary mb-3" id="button-control">Register</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
-            <div class="col-lg-2"></div>
+            <div class="col-lg-2 col-sm-0"></div>
         </div>
     </div>
 </template>
@@ -86,7 +90,6 @@ export default {
 }
 
 #box {
-    max-width: 60%;
     background: #000000;
     border: 3px red solid;
 }
@@ -99,8 +102,8 @@ label {
 }
 
 header {
-    font-family: 'batmfo';
-    color: red;
+    font-family: 'batmfa';
+    color: #ffffff;
     font-weight: 600;
     font-size: 1.8em;
     letter-spacing: 10px;
@@ -145,6 +148,12 @@ textarea:focus {
 
 .errors {
     color: #f0e130;
+}
+
+#button-control {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
 }
 
 </style>

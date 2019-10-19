@@ -4,23 +4,23 @@
 
         <div v-for="cart in carts" :key="cart.id" class="row">
             <!-- product image -->
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-sm-12">
                 <img :src="'http://localhost:8000/' + cart.image" alt="">
             </div>
 
             <!-- Product Info -->
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-sm-12">
                 <h3> {{ cart.name }} </h3>
                 <h5> Adding Date: {{ cart.created_at }} </h5>
             </div>
 
             <!-- Quantity -->
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-sm-12">
                 <h3> QTY </h3>
                 <h5> {{ cart.quantity }} </h5>
             </div>
 
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-sm-12 mb-5">
                 <h3> {{ cart.price }} PHP </h3>
                 <button @click="removeItem(cart.id)" class="btn btn-danger"> Remove </button>
             </div>

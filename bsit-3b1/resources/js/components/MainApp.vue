@@ -1,9 +1,6 @@
 <template>
     <div class="container-fluid" id="bg">
-
-        <div>
-            <Navbar />
-        </div>
+        <Navbar />
         <router-view></router-view>
     </div>
 </template>
