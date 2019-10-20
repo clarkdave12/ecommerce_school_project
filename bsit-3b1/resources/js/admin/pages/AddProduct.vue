@@ -19,7 +19,6 @@
                         <option  v-for="category in categories" :key="category.id" :value="category.id"> {{ category.name }} </option>
                     </select>
                 </div>
-
                 <input @change="imageChanged" type="file" class="form-inputs my-4">
 
                 <button type="submit" class="btn btn-primary mt-3">Add</button>    

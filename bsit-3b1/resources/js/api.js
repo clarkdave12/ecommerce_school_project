@@ -9,6 +9,7 @@ export const getUserURL = apiDomain + 'api/admin/users';
 export const productURL = apiDomain + 'api/products';
 export const feedbackURL = apiDomain + 'api/feedbacks';
 export const cartURL = apiDomain + 'api/carts';
+export const userProfileURL = apiDomain + 'api/profile';
 
 export const getHeader = function () {
     

@@ -11,6 +11,8 @@ import Login from './pages/Login.vue';
 import LandingPage from './pages/LandingPage.vue';
 import ProductDetails from './pages/ProductDetails.vue';
 import Cart from './pages/Cart.vue';
+import Profile from './pages/Profile.vue';
+import ProfileCreate from './pages/ProfileCreate.vue';
 
 export const routes = [
     /* For Admin */
@@ -66,6 +68,16 @@ export const routes = [
     {
         path: '/cart',
         component: Cart,
+        meta: { forUser: true }
+    },
+    {
+        path: '/profile/:user_id',
+        component: Profile,
+        meta: { forUser: true }
+    },
+    {
+        path: '/profile/create/:user_id',
+        component: ProfileCreate,
         meta: { forUser: true }
     }
 ]

@@ -45,10 +45,13 @@
 
             <ul class="navbar-nav ml-auto" v-if="isAuth">
                 <li v-if="! isAdmin" class="nav-item mr-3 py-2">
+                    <router-link :to="'/profile/' + user_id" class="nav-link js-scroll-trigger">Profile</router-link>
+                </li>
+                <li v-if="! isAdmin" class="nav-item mr-3 py-2">
                     <router-link to="/cart" class="nav-link js-scroll-trigger">Cart</router-link>
                 </li>
-                <li v-if="isAdmin" class="nav-item py-2">
-                    <a href="" class="nav-link js-scroll-trigger">Name</a>
+                <li v-if="isAdmin && name" class="nav-item py-2">
+                    <a href="" class="nav-link js-scroll-trigger"> {{ name }} </a>
                 </li>
                 <li class="nav-item py-2">
                     <button @click="logout()" class="btn nav-link js-scroll-trigger">Logout</button>
@@ -65,6 +68,8 @@ export default {
             isAuth: false,
             isAdmin: false,
             token: '',
+            name: '',
+            user_id: ''
         }
     },
 
@@ -102,6 +107,9 @@ export default {
             axios.get(userURL, {headers: getHeader()})
                 .then(response => {
                     this.isAuth = true
+                    this.name = response.data.last_name + ', ' + response.data.first_name
+                    this.user_id = response.data.id
+                    
                     axios.get(userRoleURL + '/' + response.data.id)
                         .then(response => {
                             if(response.data == 'User') {

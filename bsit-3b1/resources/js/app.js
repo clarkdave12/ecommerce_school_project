@@ -7,8 +7,10 @@ import axios from 'axios';
 import {routes} from './routes';
 import {registerURL, loginURL, userRoleURL, userURL, getHeader,
         categoryURL,productURL, getUserURL, feedbackURL, cartURL,
-        getAccessToken, isAuthenticated, isUserAnAdmin} from './api';
+        getAccessToken, isAuthenticated, isUserAnAdmin, userProfileURL} from './api';
 
+
+window.userProfileURL = userProfileURL;
 window.isAuthenticated = isAuthenticated;
 window.isUserAnAdmin = isUserAnAdmin;
 window.getAccessToken = getAccessToken;

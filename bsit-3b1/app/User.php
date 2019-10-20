@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function feedbacks() {
         return $this->hasMany('App\Feedback');
     }
+
+    public function profile() {
+        return $this->hasOne('App\Profile');
+    }
 }

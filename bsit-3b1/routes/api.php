@@ -27,3 +27,4 @@ Route::post('/register', 'AppController@register');
 Route::get('/user-role/{id}', 'AppController@getUserRole');
 Route::resource('/feedbacks', 'FeedbackController');
 Route::resource('/carts', 'CartsController');
+Route::resource('/profile', 'ProfilesController');
