@@ -69,15 +69,16 @@ export default {
     },
 
     mounted () {
-        axios.get(userURL, {headers: getHeader()})
-            .then(response => {
-                this.isAuth = true
-            })
-            .catch(error => {
-                this.isAuth = false
-            })
 
-            this.getUserRole()
+            if(isAuthenticated()) {
+                this.isAuth = true
+                this.getUserRole()
+            }
+            else {
+                this.isAuth = false
+            }
+
+            
 
         bus.$on('login', () => {
             this.isAuth = true

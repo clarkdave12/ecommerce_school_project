@@ -43,12 +43,30 @@ export const getAccessToken = function () {
 }
 
 export const isAuthenticated = function () {
+    if(getAccessToken()) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+export const isUserAnAdmin = function () {
+    const isAdmin = false
     axios.get(userURL, {headers: getHeader()})
         .then(response => {
-            return true
+            const id = response.data.id
+            axios.get(userRoleURL + '/' + id)
+                .then(response => {
+                    isAdmin = true                    
+                })
+                .catch(error => {
+                    isAdmin = false
+                })
         })
         .catch(error => {
-            
-            return false
+            console.log(error)
         })
+
+        return isAdmin
 }

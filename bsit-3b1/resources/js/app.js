@@ -2,14 +2,15 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { store } from './store';
 import axios from 'axios';
 import {routes} from './routes';
 import {registerURL, loginURL, userRoleURL, userURL, getHeader,
         categoryURL,productURL, getUserURL, feedbackURL, cartURL,
-        getAccessToken, isAuthenticated} from './api';
-
+        getAccessToken, isAuthenticated, isUserAnAdmin} from './api';
 
 window.isAuthenticated = isAuthenticated;
+window.isUserAnAdmin = isUserAnAdmin;
 window.getAccessToken = getAccessToken;
 window.cartURL = cartURL;
 window.feedbackURL = feedbackURL;
@@ -37,53 +38,39 @@ router.beforeEach(
     (to, from, next) => {
         /* Navigation Guard for Guest */
         if(to.matched.some(record => record.meta.forGuest)) {
-            axios.get(userURL, {headers: getHeader()})
-                .then(response => {
-                    
-                    next({ path: '/products' })
-                })
-                .catch(error => {
-                    
-                    next()
-                })
+            if(isAuthenticated) {
+                next({path: '/products'})
+            }
+            else {
+                next()
+            }
         }
         else { next() }
 
         /* Navigation Guard for User */
         if(to.matched.some(record => record.meta.forUser)) {
-            axios.get(userURL, {headers: getHeader()})
-                .then(response => {
-                    next()
-                })
-                .catch(error => {
-                    next({ path: '/login' })
-                })
+           if(!isAuthenticated) {
+               next({ path: '/login' })
+           }
+           else {
+               next()
+           }
         }
         else { next() }
 
         /* Navigation Guard for Admin */
         if(to.matched.some(record => record.meta.forAdmin)) {
-            axios.get(userURL, {headers: getHeader()})
-                .then(response => {
-                    axios.get(userRoleURL + '/' + response.data.id)
-                        .then(response => {
-                            if(response.data == 'User') {
-                                next({ path: '/products' })
-                            }
-                            else if(response.data == 'Admin') {
-                                next()
-                            }
-                            else {
-                                next({ path: '/login' })
-                            }
-                        })
-                        .catch(error => {
-                            next({ path: '/login' })
-                        })
-                })
-                .catch(error => {
-                    next({ path: '/login' })
-                })
+            if(isAuthenticated) {
+                if(isUserAnAdmin) {
+                    next()
+                }
+                else {
+                    next({ path: '/' })
+                }
+            }
+            else {
+                next({ path: '/login' })
+            }
         }
         else { next() }
     }
@@ -95,5 +82,6 @@ Vue.component('admin-navbar', require('./admin/AdminNavbar.vue').default);
 
 const app = new Vue({
     router,
+    store,
     el: '#app',
 });

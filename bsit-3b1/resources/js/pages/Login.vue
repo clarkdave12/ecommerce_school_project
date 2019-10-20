@@ -41,13 +41,6 @@ export default {
     },
 
     mounted () {
-        axios.get(userURL, {headers: getHeader()})
-            .then(response => {
-                this.getUserRole(response.data.id)
-            })
-            .catch(error => {
-                
-            })
 
         bus.$on('login', () => {
             axios.get(userURL, {headers: getHeader()})
@@ -55,12 +48,13 @@ export default {
                 this.getUserRole(response.data.id)
             })
             .catch(error => {
-                
+                console.log(response)              
             })
         })
     },
 
     methods: {
+
         login() {
 
             var data = {
@@ -81,6 +75,7 @@ export default {
                    const expires = d.toUTCString();
 
                    document.cookie = 'access_token=' + access_token + ';' + 'expires=' + expires + ';path=/';
+                    
                    bus.$emit('login')
                    
                 })
@@ -100,7 +95,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    
+                    console.log(error)
                 })
         }
     }

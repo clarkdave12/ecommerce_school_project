@@ -23,8 +23,8 @@ export default {
     },
 
     mounted () {
-        this.getProducts()
 
+        this.getProducts()
         bus.$on('product-deleted', () => {
             this.getProducts()
         })

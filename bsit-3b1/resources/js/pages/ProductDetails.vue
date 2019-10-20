@@ -7,7 +7,7 @@
                 <div class="row mt-3">
                     <div class="col-lg-6 col-sm-12 mb-3">
                         <form>
-                            <input id="quantity" v-model="quantity" type="number" class="form-control" placeholder="Quantity">
+                            <input id=" " v-model="quantity" type="number" class="form-control" placeholder="Quantity">
                         </form>
                     </div>
                     <div class="col-lg-6 col-sm-12 mb-5">
