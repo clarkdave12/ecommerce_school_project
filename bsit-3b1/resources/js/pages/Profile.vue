@@ -1,13 +1,8 @@
 <template>
     <div class="container">
         <div class="row">
-            
-            <div v-if="! userProfile" class="col-lg-8 col-sm-12">
-                <h3> You don't have a profile yet </h3>
-                <button @click.prevent="createProfile" class="btn btn-primary"> Create One ? </button>
-            </div>
 
-            <div v-if="userProfile" class="col-lg-8 col-sm-12">
+            <div class="col-lg-8 col-sm-12">
                 
                 <div class="col-lg-12 col-sm-12 mb-3">
                     
@@ -34,7 +29,7 @@
                     <h5>Religion: {{ userProfile.religion }} </h5>
                 </div>
 
-                <button class="btn btn-danger"> Edit your Profile </button>
+                <button class="btn btn-primary"> Update Profile </button>
             </div>
         </div>
     </div>
@@ -43,16 +38,15 @@
 
 <script>
 export default {
-    data () {
-        return {
-            userProfile: [],
-            hasProfile: true,
+
+    computed: {
+        userProfile() {
+            return this.$store.state.profile
         }
     },
 
-    mounted () {
-        this.getUserProfile()
-        console.log(this.userProfile)
+    created () {
+        this.$store.dispatch('GET_PROFILE', this.$route.params.user_id)
     },
 
     methods: {

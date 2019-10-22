@@ -2,31 +2,14 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { store } from './store';
 import axios from 'axios';
 import {routes} from './routes';
-import {registerURL, loginURL, userRoleURL, userURL, getHeader,
-        categoryURL,productURL, getUserURL, feedbackURL, cartURL,
-        getAccessToken, isAuthenticated, isUserAnAdmin, userProfileURL} from './api';
-
-
-window.userProfileURL = userProfileURL;
-window.isAuthenticated = isAuthenticated;
-window.isUserAnAdmin = isUserAnAdmin;
-window.getAccessToken = getAccessToken;
-window.cartURL = cartURL;
-window.feedbackURL = feedbackURL;
-window.productURL = productURL;
-window.getUserURL = getUserURL;
-window.categoryURL = categoryURL;
-window.getHeader = getHeader;
-window.userURL = userURL;
-window.userRoleURL = userRoleURL;
-window.registerURL = registerURL;
-window.loginURL = loginURL;
+import {store} from './store/store'
+import {api} from './api'
 
 Vue.use(VueRouter);
 
+window.api = api;
 window.axios = axios;
 window.bus = new Vue();
 
@@ -38,49 +21,93 @@ const router = new VueRouter({
 
 router.beforeEach(
     (to, from, next) => {
-        /* Navigation Guard for Guest */
+        /* for Guest */
         if(to.matched.some(record => record.meta.forGuest)) {
-            if(isAuthenticated) {
-                next({path: '/products'})
-            }
+            if(localStorage.getItem('token')) {
+                store.dispatch('USER_DATA')
+                    .then(() => {
+                        if(store.state.user.role == 'Admin') {
+                            next({
+                                path: '/admin'
+                            })
+                        }
+                        else if(store.state.user.role == 'User') {
+                            next({
+                                path: '/products'
+                            })
+                        }
+                        else {
+                            next()
+                        }
+                    })
+                    .catch(error => {
+                        next()
+                    })
+            } 
             else {
                 next()
             }
         }
-        else { next() }
-
-        /* Navigation Guard for User */
-        if(to.matched.some(record => record.meta.forUser)) {
-           if(!isAuthenticated) {
-               next({ path: '/login' })
-           }
-           else {
-               next()
-           }
-        }
-        else { next() }
-
-        /* Navigation Guard for Admin */
-        if(to.matched.some(record => record.meta.forAdmin)) {
-            if(isAuthenticated) {
-                if(isUserAnAdmin) {
-                    next()
-                }
-                else {
-                    next({ path: '/' })
-                }
+        /* for user */
+        else if(to.matched.some(record => record.meta.forUser)) {
+            if(localStorage.getItem('token')) {
+                store.dispatch('USER_DATA')
+                    .then(() => {
+                        if(store.state.user.role == 'User') {
+                            next()
+                        }
+                        else {
+                            next({
+                                path: '/products'
+                            })
+                        }
+                    })
+                    .catch(error => {
+                        next({
+                            path: '/login'
+                        })
+                    })
             }
             else {
-                next({ path: '/login' })
+                next({
+                    path: '/login'
+                })
             }
         }
-        else { next() }
+        /* for Admin */
+        else if(to.matched.some(record => record.meta.forAdmin)) {
+            if(localStorage.getItem('token')) {
+                store.dispatch('USER_DATA')
+                    .then(() => {
+                        if(store.state.user.role == 'Admin') {
+                            next()
+                        }
+                        else {
+                            next({
+                                path: '/'
+                            })
+                        }
+                    })
+                    .catch(error => {
+                        next({
+                            path: '/login'
+                        })
+                    })
+            }
+            else {
+                next({
+                    path: '/login'
+                })
+            }
+        }
+        else {
+            next()
+        }
     }
 )
 
 
 Vue.component('main-app', require('./components/MainApp.vue').default);
-Vue.component('admin-navbar', require('./admin/AdminNavbar.vue').default);
 
 const app = new Vue({
     router,

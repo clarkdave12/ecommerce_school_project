@@ -7,7 +7,7 @@
                 <div class="mb-3">
                     <header>Login</header>
                 </div>
-                <form @submit.prevent="login()">
+                <form @submit.prevent="logins()">
                     <div class="mb-5">
                         <input placeholder="Email Address" type="text" class="inp" v-model="user.email">
                         <span class="error" v-if="errorMessage"> {{ errorMessage }} </span>
@@ -43,17 +43,47 @@ export default {
     mounted () {
 
         bus.$on('login', () => {
-            axios.get(userURL, {headers: getHeader()})
-            .then(response => {
-                this.getUserRole(response.data.id)
-            })
-            .catch(error => {
-                console.log(response)              
-            })
+            
         })
     },
 
     methods: {
+
+        logins() {
+            var data = {
+                client_id: 2,
+                client_secret: 'R7wCkSwzME4gyI9OnbbEdTIPQ0uv6e3bfVnB7SXr',
+                grant_type: 'password',
+                username: this.user.email,
+                password: this.user.password
+            }
+
+            this.$store.dispatch('LOGIN', data)
+                .then(response => {
+                    localStorage.setItem('token', this.$store.state.token.access_token)
+
+                    this.$store.dispatch('USER_DATA')
+                        .then(() => {
+                            if(this.$store.state.user.role == 'Admin') {
+                                console.log(this.$store.state.user.role)
+                                bus.$emit('login')
+                                this.$router.replace('/admin')
+                            }
+                            else if(this.$store.state.user.role == 'User') {
+                                console.log(this.$store.state.user.role)
+                                bus.$emit('login')
+                                this.$router.replace('/products')
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
 
         login() {
 
@@ -75,8 +105,26 @@ export default {
                    const expires = d.toUTCString();
 
                    document.cookie = 'access_token=' + access_token + ';' + 'expires=' + expires + ';path=/';
-                    
-                   bus.$emit('login')
+                   
+                   axios.get(userURL, {headers: getHeader()})
+                        .then(response => {
+                            axios.get(userRoleURL + '/' + response.data.id)
+                                    .then(response => {
+                                        if(response.data == 'Admin') {
+                                            this.$router.replace('/admin')
+                                        }
+                                        else if(response.data == 'User') {
+                                            this.$router.replace('/products')
+                                        }
+                                        bus.$emit('login')
+                                    })
+                                    .catch(error => {
+                                        console.log(error)
+                                    })
+                        })
+                        .catch(error => {
+                            console.log(response)              
+                        })
                    
                 })
                 .catch(error => {
@@ -85,18 +133,7 @@ export default {
         },
 
         getUserRole (id) {
-            axios.get(userRoleURL + '/' + id)
-                .then(response => {
-                    if(response.data == 'Admin') {
-                        this.$router.push('/admin')
-                    }
-                    else if(response.data == 'User') {
-                        this.$router.push('/products')
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            
         }
     }
     

@@ -57,74 +57,68 @@
 export default {
     data () {
         return {
-            product: [],
-            feedbacks: [],
             error: '',
             quantity: '',
             comment: ''
         }
     },
 
-    mounted() {
-        axios.get(productURL + '/' + this.$route.params.id)
-            .then(response => {
-                this.product = response.data.product
-            })
-            .catch(error => {
-                console.log(error)
-            })
+    computed: {
+        product() {
+            return this.$store.state.product
+        },
 
-            this.getFeedbacks()
+        feedbacks() {
+            return this.$store.state.feedbacks
+        },
 
-            bus.$on('load-feedbacks', () => {
-                this.getFeedbacks()
-            })
+        getPrice() {
+            const price = (this.$store.state.product.price * this.quantity)
+
+            return price
+        }
+    },
+
+    created() {
+        this.$store.dispatch('GET_PRODUCT_INFO', this.$route.params.id)
+        this.$store.dispatch('GET_FEEDBACKS', this.$route.params.id)
+
+        bus.$on('feedbackPosted', () => {
+            this.comment = ''
+            this.$store.dispatch('GET_FEEDBACKS', this.$route.params.id)
+        })
     },
 
     methods: {
-        getFeedbacks() {
-            axios.get(feedbackURL + '/' + this.$route.params.id)
-                .then(response => {
-                    this.feedbacks = response.data.feedbacks
-                    console.log(this.feedbacks)
-                })
-                .catch(error => {
-                    this.error = error.response.data.error
-                })
-        },
-
         order() {
+            
             const data = {
                 quantity: this.quantity,
-                product_id: this.$route.params.id,
-                user_id: window.localStorage.getItem('id')
+                product_id: this.$store.state.product.id,
+                user_id: this.$store.state.user.id,
+                price: this.getPrice
             }
 
-            axios.post(cartURL, data)
-                .then(response => {
-                    this.quantity = ''
-                    alert('Added')
-                })
+            this.$store.dispatch('ADD_TO_CART', data)
                 .catch(error => {
-                    console.log(error.response)
+                    console.log(error)
                 })
         },
 
         postFeedback() {
             const data = {
-                ratings: 3,
-                user_id: window.localStorage.getItem('id'),
-                product_id: this.$route.params.id,
-                comment: this.comment
+                user_id: this.$store.state.user.id,
+                product_id: this.$store.state.product.id,
+                comment: this.comment,
+                ratings: 3
             }
 
-            axios.post(feedbackURL, data)
-                .then(response => {
-                    bus.$emit('load-feedbacks')
-                    this.comment = ''
+            this.$store.dispatch('POST_FEEDBACK', data)
+                .then(() => {
+                    bus.$emit('feedbackPosted')
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    console.log(error)
                 })
         }
     }

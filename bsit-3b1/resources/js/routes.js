@@ -4,6 +4,7 @@ import AdminCategories from './admin/pages/Categories.vue';
 import AdminProducts from './admin/pages/Products.vue';
 import AdminUsers from './admin/pages/Users.vue';
 import AddProduct from './admin/pages/AddProduct.vue';
+import ManageFeedbacks from './admin/pages/ManageFeedbacks.vue';
 
 import Home from './pages/Home.vue';
 import Register from './pages/Register.vue';
@@ -13,6 +14,8 @@ import ProductDetails from './pages/ProductDetails.vue';
 import Cart from './pages/Cart.vue';
 import Profile from './pages/Profile.vue';
 import ProfileCreate from './pages/ProfileCreate.vue';
+import UserFeedback from './pages/UserFeedback.vue';
+import Logout from './pages/Logout.vue';
 
 export const routes = [
     /* For Admin */
@@ -41,6 +44,11 @@ export const routes = [
         component: AddProduct,
         meta: { forAdmin: true }
     },
+    {
+        path: '/admin/manage_feedbacks',
+        component: ManageFeedbacks,
+        meta: { forAdmin: true }
+    },
 
     /* Other Routes */
     {
@@ -66,7 +74,7 @@ export const routes = [
         meta: { forGuest: true }
     },
     {
-        path: '/cart',
+        path: '/cart/:user_id',
         component: Cart,
         meta: { forUser: true }
     },
@@ -79,5 +87,10 @@ export const routes = [
         path: '/profile/create/:user_id',
         component: ProfileCreate,
         meta: { forUser: true }
-    }
+    },
+    {
+        path: '/user_feedback/:user_id',
+        component: UserFeedback,
+        meta: { forUser: true }
+    },
 ]

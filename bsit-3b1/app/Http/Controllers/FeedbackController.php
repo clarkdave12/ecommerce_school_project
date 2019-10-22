@@ -18,9 +18,16 @@ class FeedbackController extends Controller
     public function index()
     {
        $data = DB::table('feedback')
-                    ->join('products', 'feedback.product_id', '=', 'products.id')
+                    ->leftjoin('products', 'feedback.product_id', '=', 'products.id')
                     ->join('users', 'feedback.user_id', '=', 'users.id')
-                    ->select('feedback.comment', 'feedback.ratings', 'products.name', 'products.description', 'products.price', 'users.first_name', 'users.last_name')
+                    ->select('feedback.comment',
+                             'feedback.ratings',
+                             'products.name', 
+                             'products.image',
+                             'products.description',
+                             'products.price', 
+                             'users.first_name', 
+                             'users.last_name')
                     ->get();
         return $data;
     }
@@ -68,12 +75,6 @@ class FeedbackController extends Controller
         return response()->json(['feedbacks' => $data], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
@@ -100,5 +101,15 @@ class FeedbackController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getUserFeedback($id) {
+        $feedback = DB::table('feedback')
+                        ->join('products', 'feedback.product_id', '=', 'products.id')
+                        ->select('products.name', 'products.image', 'feedback.comment', 'feedback.ratings')
+                        ->where('feedback.user_id', $id)
+                        ->get();
+
+        return response()->json(['feedbacks' => $feedback], 200);
     }
 }

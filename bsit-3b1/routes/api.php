@@ -24,7 +24,8 @@ Route::get('/admin/users', 'AppController@getUserList');
 
 /* Others */
 Route::post('/register', 'AppController@register');
-Route::get('/user-role/{id}', 'AppController@getUserRole');
+Route::get('/user-role/{id}', 'AppController@getUserRole')->middleware('auth:api');
 Route::resource('/feedbacks', 'FeedbackController');
 Route::resource('/carts', 'CartsController');
 Route::resource('/profile', 'ProfilesController');
+Route::get('/user-feedback/{user_id}', 'FeedbackController@getUserFeedback');

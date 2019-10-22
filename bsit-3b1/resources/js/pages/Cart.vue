@@ -32,40 +32,28 @@
 
 <script>
 export default {
-    data () {
-        return {
-            carts: []
+    computed: {
+        carts() {
+            return this.$store.state.cart
         }
     },
 
-    mounted () {
-        this.getCart()
+    created () {
+        this.$store.dispatch('GET_CART', this.$store.state.user.id)
 
-        bus.$on('item-deleted', () => {
-            this.getCart()
+        bus.$on('itemRemoved', () => {
+            this.$store.dispatch('GET_CART', this.$store.state.user.id)
         })
     },
 
     methods: {
-        getCart () {
-            axios.get(cartURL + '/' + window.localStorage.getItem('id'))
-                .then(response => {
-                    this.carts = response.data
-                    console.log(this.cart)
+        removeItem(id) {
+            axios.delete(api.carts + '/' + id)
+                .then(() => {
+                    bus.$emit('itemRemoved')
                 })
                 .catch(error => {
-                    console.log(error.response)
-                })
-        },
-
-        removeItem (id) {
-            axios.delete(cartURL + '/' + id)
-                .then(response => {
-                    console.log(response)
-                    bus.$emit('item-deleted')
-                })
-                .catch(error => {
-                    console.log(error.response)
+                    console.log(error)
                 })
         }
     }

@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <admin-navbar></admin-navbar>
         <div class="form-group px-5 py-3" id="form-box">
 
             <h3 id="form-title"> Add new product </h3>
@@ -31,8 +30,6 @@
 export default {
     data () {
         return {
-            categories: [],
-
             product: {
                 name: '',
                 description: '',
@@ -43,30 +40,32 @@ export default {
         }
     },
 
-    mounted() {
-        this.getCategories()
+    computed: {
+        categories() {
+            return this.$store.state.categories
+        }
+    },
+
+    created() {
+        this.$store.dispatch('GET_CATEGORIES')
+            .catch(error => {
+                console.log(error)
+            })
     },
 
     methods: {
         addProduct() {
+            this.$store.dispatch('ADD_PRODUCT', this.product)
+                .then(() => {
+                    this.product.name = ''
+                    this.product.description = ''
+                    this.product.price = ''
+                    this.product.category_id = ''
 
-            console.log(this.product)
-            axios.post(productURL, this.product)
-                .then(response => {
-                    console.log(response)
+                    window.alert('Product Added')
                 })
                 .catch(error => {
                     console.log(error.response)
-                })
-        },
-
-        getCategories() {
-            axios.get(categoryURL)
-                .then(response => {
-                    this.categories = response.data
-                })
-                .catch(error => {
-                    console.log(error)
                 })
         },
 
@@ -78,9 +77,6 @@ export default {
             fileReader.onload = (e) => {
                 this.product.image = e.target.result
             }
-
-            
-
         }
     }
 }

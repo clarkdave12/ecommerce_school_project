@@ -6,7 +6,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="content">
-            <ul class="navbar-nav mr-auto" v-if="!isAdmin">
+            <ul class="navbar-nav mr-auto" v-if="isAdmin === false">
                 <li class="nav-item py-2">
                     <router-link to="/products" class="nav-link js-scroll-trigger"> Products </router-link>
                 </li>
@@ -18,13 +18,16 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav mr-auto" v-if="isAdmin">
+            <ul class="navbar-nav mr-auto" v-if="isAdmin === true">
                 <!-- Admin Controls -->
                 <li class="nav-item py-2">
                     <router-link to="/admin/categories" class="nav-link js-scroll-trigger" id="link"> Categories </router-link>
                 </li>
-                <li class="nav-item py-2">
+                <!-- <li class="nav-item py-2">
                     <router-link to="/admin/users" class="nav-link js-scroll-trigger" id="link"> Users </router-link>
+                </li> -->
+                <li class="nav-item py-2">
+                    <router-link to="/admin/manage_feedbacks" class="nav-link js-scroll-trigger" id="link"> Feedbacks </router-link>
                 </li>
                 <li class="nav-item py-2">
                     <router-link to="/admin/products" class="nav-link js-scroll-trigger" id="link"> Products </router-link>
@@ -34,7 +37,7 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto" v-if="!isAuth">
+            <ul class="navbar-nav ml-auto" v-if="isAuth === false">
                 <li class="nav-item mr-3 py-2">
                     <router-link to="/register" class="nav-link js-scroll-trigger">Register</router-link>
                 </li>
@@ -43,18 +46,22 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto" v-if="isAuth">
+            <ul class="navbar-nav ml-auto" v-if="isAuth === true">
                 <li v-if="! isAdmin" class="nav-item mr-3 py-2">
                     <router-link :to="'/profile/' + user_id" class="nav-link js-scroll-trigger">Profile</router-link>
                 </li>
                 <li v-if="! isAdmin" class="nav-item mr-3 py-2">
-                    <router-link to="/cart" class="nav-link js-scroll-trigger">Cart</router-link>
+                    <router-link :to="'/user_feedback/' + user_id" class="nav-link js-scroll-trigger">Feedbacks</router-link>
+                </li>
+                <li v-if="! isAdmin" class="nav-item mr-3 py-2">
+                    <router-link :to="'/cart/' + user_id" class="nav-link js-scroll-trigger">Cart</router-link>
                 </li>
                 <li v-if="isAdmin && name" class="nav-item py-2">
                     <a href="" class="nav-link js-scroll-trigger"> {{ name }} </a>
                 </li>
                 <li class="nav-item py-2">
-                    <button @click="logout()" class="btn nav-link js-scroll-trigger">Logout</button>
+                    <a @click="logout()" class="nav-link js-scroll-trigger" role="button">Logout</a>
+                    <!-- <button @click="logout()" class="btn nav-link js-scroll-trigger">Logout</button> -->
                 </li>
             </ul>
         </div>
@@ -67,77 +74,61 @@ export default {
         return {
             isAuth: false,
             isAdmin: false,
-            token: '',
-            name: '',
             user_id: ''
+            
         }
     },
 
-    mounted () {
-
-            if(isAuthenticated()) {
-                this.isAuth = true
-                this.getUserRole()
-            }
-            else {
-                this.isAuth = false
-            }
-
-            
+    computed: {
+        name() {
+            return this.$store.state.user.name
+        }
+    },
+    
+    created () {
+        this.setUser()
 
         bus.$on('login', () => {
-            this.isAuth = true
-            this.getUserRole()
+            this.setUser()
         })
 
         bus.$on('logout', () => {
-            axios.get(userURL, {headers: getHeader()})
-            .then(response => {
-                this.isAuth = true
-            })
-            .catch(error => {
-                this.isAuth = false
-            }) 
+            this.isAuth = false
+            this.isAdmin = false
+            this.$router.push('/login')
         })
     },
-    
+
     methods: {
-        
-        getUserRole() {
-            axios.get(userURL, {headers: getHeader()})
-                .then(response => {
-                    this.isAuth = true
-                    this.name = response.data.last_name + ', ' + response.data.first_name
-                    this.user_id = response.data.id
-                    
-                    axios.get(userRoleURL + '/' + response.data.id)
-                        .then(response => {
-                            if(response.data == 'User') {
-                                this.isAdmin = false
-                            }
-                            else if(response.data == 'Admin') {
-                                this.isAdmin = true
-                            }
-                        })
-                        .catch(error => {
+
+        setUser() {
+            if(localStorage.getItem('token')) {
+                
+                this.$store.dispatch('USER_DATA')
+                    .then(() => {
+                        
+                        if(this.$store.state.user.role == 'Admin') {
+                            this.isAuth = true
+                            this.isAdmin = true
+                            this.user_id = this.$store.state.user.id
+                        }
+                        else if(this.$store.state.user.role == 'User') {
+                            this.isAuth = true
+                            this.isAdmin = false
+                            this.user_id = this.$store.state.user.id
+                        }
+                        else {
                             this.isAuth = false
-                        })
-                })
-                .catch(error => {
-                    this.isAuth = false
-                })
+                            this.isAdmin = false
+                        }
+                    })
+            }
         },
 
         logout() {
-            
-            const d = new Date()
-            d.setTime(d.getTime() + (-1 * 24 * 60 * 60 * 1000));
-            const expires = d.toUTCString();
-
-            document.cookie = 'access_token=;expires=' + expires;
+            localStorage.removeItem('token')
             bus.$emit('logout')
-            this.$router.push('/login')
-        },
+        }
     }
 }
 </script>

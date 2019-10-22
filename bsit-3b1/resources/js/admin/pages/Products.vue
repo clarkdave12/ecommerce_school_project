@@ -31,35 +31,34 @@
 
 <script>
 export default {
-    data () {
-        return {
-            products: []
+
+    computed: {
+        products() {
+            return this.$store.state.products
         }
     },
 
-    mounted () {
-        this.getProducts()
+    created () {
 
-        bus.$on('product-deleted', () => {
-            this.getProducts()
+        this.$store.dispatch('GET_PRODUCTS')
+            .catch(error => {
+                console.log(error)
+            })
+
+        bus.$on('product-updated', () => {
+            this.$store.dispatch('GET_PRODUCTS')
+                .catch(error => {
+                    console.log(error)
+                })
         })
     },
 
     methods: {
-        getProducts() {
-            axios.get(productURL)
-                .then(response => {
-                    this.products = response.data.products
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-
+        
         deleteProduct(id) {
-            axios.delete(productURL + '/' + id)
-                .then(response => {
-                    bus.$emit('product-deleted')
+            this.$store.dispatch('DELETE_PRODUCT', id)
+                .then(() => {
+                    bus.$emit('product-updated')
                 })
                 .catch(error => {
                     console.log(error)

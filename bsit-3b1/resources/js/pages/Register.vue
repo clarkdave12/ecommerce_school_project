@@ -35,7 +35,7 @@
 
                         <div class="mb-5">
                             <input placeholder="Confirm Password" type="password" v-model="confirmPassword">
-                            <span class="confirmError" v-if="confirmError"> {{ confirmError }} </span>
+                            <span class="errors" v-if="confirmError"> {{ confirmError }} </span>
                         </div>
 
                         <div class="row">
@@ -69,14 +69,21 @@ export default {
 
     methods: {
         register () {
-            axios.post(registerURL, this.user)
-                .then(response => {
-                    this.$router.push('/login')
-                })
-                .catch(error => {
-                    this.errors = error.response.data.errors
-                    console.log(this.errors)
-                })
+            if(this.user.password !== this.confirmPassword) {
+                this.confirmError = 'The password do not matched'
+            }
+            else {
+                this.confirmError = ''
+
+                this.$store.dispatch('REGISTER', this.user)
+                    .then(() => {
+                        this.$router.push('/login')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.errors = error.errors
+                    })
+            }
         }
     }
 }

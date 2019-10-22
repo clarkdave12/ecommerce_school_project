@@ -16,26 +16,21 @@
 
 <script>
 export default {
-    data () {
-        return {
-            products: []
+
+    computed: {
+        products() {
+            return this.$store.state.products
         }
     },
 
-    mounted () {
-
+    mounted() {
         this.getProducts()
-        bus.$on('product-deleted', () => {
-            this.getProducts()
-        })
     },
 
     methods: {
+
         getProducts() {
-            axios.get(productURL)
-                .then(response => {
-                    this.products = response.data.products
-                })
+            this.$store.dispatch('GET_PRODUCTS')
                 .catch(error => {
                     console.log(error)
                 })

@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <admin-navbar></admin-navbar>
         <h3 id="page-title">Categories</h3>
         <hr>
 
@@ -71,37 +70,32 @@ export default {
                 name: '',
                 id: ''
             },
-            categories: []
         }
     },
 
-    mounted() {
-        this.getCategories()
+    computed: {
+        categories() {
+            return this.$store.state.categories
+        }
+    },
+
+    created () {
+        this.$store.dispatch('GET_CATEGORIES')
 
         bus.$on('category-show', () => {
-            this.getCategories()
+            this.$store.dispatch('GET_CATEGORIES')
         })
     },
 
     methods: {
         addCategory() {
-            axios.post(categoryURL, this.category)
-                .then(response => {
-                    bus.$emit('category-show')
+            this.$store.dispatch('ADD_CATEGORY', this.category)
+                .then(() => {
                     this.category.name = ''
+                    bus.$emit('category-show')
                 })
                 .catch(error => {
                     console.log(error)
-                })
-        },
-
-        getCategories() {
-            axios.get(categoryURL)
-                .then(response => {
-                    this.categories = response.data
-                })
-                .catch(error => {
-                    console.log(error.response)
                 })
         },
 
@@ -112,25 +106,25 @@ export default {
         },
 
         updateCategory() {
-            axios.put(categoryURL + '/' + this.update.id, this.update)
-                .then(response => {
-                    console.log(response)
+            
+            this.$store.dispatch('UPDATE_CATEGORY', this.update)
+                .then(() => {
                     this.isUpdating = false
                     bus.$emit('category-show')
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    console.log(error)
                 })
         },
 
         deleteCategory(id) {
 
-            axios.delete(categoryURL + '/' + id)
-                .then(response => {
+            this.$store.dispatch('DELETE_CATEGORY', id)
+                .then(() => {
                     bus.$emit('category-show')
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    console.log(error)
                 })
         }
     }
