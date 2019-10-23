@@ -5,6 +5,7 @@ import AdminProducts from './admin/pages/Products.vue';
 import AdminUsers from './admin/pages/Users.vue';
 import AddProduct from './admin/pages/AddProduct.vue';
 import ManageFeedbacks from './admin/pages/ManageFeedbacks.vue';
+import EditProduct from './admin/pages/EditProduct.vue';
 
 import Home from './pages/Home.vue';
 import Register from './pages/Register.vue';
@@ -15,7 +16,6 @@ import Cart from './pages/Cart.vue';
 import Profile from './pages/Profile.vue';
 import ProfileCreate from './pages/ProfileCreate.vue';
 import UserFeedback from './pages/UserFeedback.vue';
-import Logout from './pages/Logout.vue';
 
 export const routes = [
     /* For Admin */
@@ -37,6 +37,11 @@ export const routes = [
     {
         path: '/admin/products',
         component: AdminProducts,
+        meta: { forAdmin: true }
+    },
+    {
+        path: '/admin/product/:product_id',
+        component: EditProduct,
         meta: { forAdmin: true }
     },
     {

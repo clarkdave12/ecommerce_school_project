@@ -16,7 +16,7 @@
 
                         <div class="row">
                             <div class="col-6 col-sm-6">
-                                <button class="btn btn-warning">Edit</button>
+                                <router-link :to="'/admin/product/' + product.id" class="btn btn-warning">Edit</router-link>
                             </div>
                             <div class="col-6 col-sm-6">
                                 <button @click="deleteProduct(product.id)" class="btn btn-danger">Delete</button>
@@ -63,7 +63,7 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
-        }
+        },
     }
 }
 </script>

@@ -299,6 +299,19 @@ export const store = new Vuex.Store({
             })
         },
 
+        UPDATE_PRODUCT: ({commit}, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.put(api.products + '/' + payload.product_id, payload)
+                    .then(() => {
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error.response)
+                    })
+            })
+        },
+
         DELETE_PRODUCT: ({commit}, payload) => {
             
             return new Promise((resolve, reject) => {
