@@ -65,12 +65,8 @@ class FeedbackController extends Controller
                     ->join('products', 'feedback.product_id', '=', 'products.id')
                     ->join('users', 'feedback.user_id', '=', 'users.id')
                     ->where('feedback.product_id', $id)
-                    ->select('feedback.comment', 'feedback.ratings', 'users.first_name', 'users.last_name')
+                    ->select('feedback.id', 'feedback.comment', 'feedback.ratings', 'users.first_name', 'users.last_name')
                     ->get();
-
-        if(count($data) == 0) {
-            return response()->json(['error' => 'No feedback for this product yet.'], 404);
-        }
 
         return response()->json(['feedbacks' => $data], 200);
     }

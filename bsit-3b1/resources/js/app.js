@@ -2,12 +2,16 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Vuetify from 'vuetify';
 import axios from 'axios';
 import {routes} from './routes';
 import {store} from './store/store'
 import {api} from './api'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.use(VueRouter);
+Vue.use(Vuetify);
+
 
 window.api = api;
 window.axios = axios;
@@ -48,6 +52,37 @@ router.beforeEach(
                 next()
             }
         }
+
+        /* For Authenticated */
+        if(to.matched.some(record => record.meta.forAuth)) {
+            if(localStorage.getItem('token')) {
+                store.dispatch('USER_DATA')
+                    .then(() => {
+                        if(store.state.user.role == 'Admin') {
+                            next()
+                        }
+                        else if(store.state.user.role == 'User') {
+                            next()
+                        }
+                        else {
+                            next({
+                                path: '/login'
+                            })
+                        }
+                    })
+                    .catch(error => {
+                        next({
+                            path: '/login'
+                        })
+                    })
+            } 
+            else {
+                next({
+                    path: '/login'
+                })
+            }
+        }
+
         /* for user */
         else if(to.matched.some(record => record.meta.forUser)) {
             if(localStorage.getItem('token')) {
@@ -113,4 +148,9 @@ const app = new Vue({
     router,
     store,
     el: '#app',
+    vuetify: new Vuetify({
+        icons: {
+            iconfont: 'md'
+        }
+    }),
 });

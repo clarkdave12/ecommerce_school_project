@@ -1,43 +1,66 @@
 <template>
-    <div class="container">
-        <div class="row">
+    <v-container>
+            <!-- User Profile Information -->
+            <v-layout column align-center>
+                <v-flex>
+                    <v-avatar size="100">
+                        <img src="http://localhost:8000/images/monitor.jpeg" alt="profile">
+                    </v-avatar>
+                </v-flex>
+                <v-flex>
+                    <div class="mt-3" id="profile-name-container"> <h4 id="profile-name"> {{ userProfile.first_name }} {{ userProfile.last_name }} </h4> </div>
+                </v-flex>
+                <v-flex> <header> {{ userProfile.email }} </header> </v-flex>
+                <v-flex>
+                    <div> <p> {{ userProfile.address }} </p> </div>
+                </v-flex>
+            </v-layout>
 
-            <div class="col-lg-8 col-sm-12">
-                
-                <div class="col-lg-12 col-sm-12 mb-3">
-                    
-                    <div class="image-frame">
-                        <img :src="'http://localhost:8000/' + userProfile.image">
-                    </div>
+            <v-footer fixed dark>
+                <v-btn block dark color="primary" @click="profileUpdating = true"> update profile </v-btn>
+            </v-footer>
 
-                    <h4>Name: {{ userProfile.last_name }}, {{ userProfile.first_name }} </h4>
-                    <h6> Email: {{ userProfile.email }} </h6>
-                    <small> Address: {{ userProfile.address }} </small>
-                </div>
+            <!-- Update Profile Info Modal -->
+            <v-dialog v-model="profileUpdating">
+                <v-card dark>
+                    <v-form @submit.prevent="updateProfile">
+                        <v-card-title id="modal-title">Update Profile</v-card-title>
 
-                <!-- All Optionals Fields -->
-                <div v-if="userProfile.age" class="col-lg-12 col-sm-12">
-                    <h5>Age: {{ userProfile.age }} </h5>
-                </div>
-                <div v-if="userProfile.gender" class="col-lg-12 col-sm-12">
-                    <h5>Gender: {{ userProfile.gender }} </h5>
-                </div>
-                <div v-if="userProfile.work" class="col-lg-12 col-sm-12">
-                    <h5>Work: {{ userProfile.work }} </h5>
-                </div>
-                <div v-if="userProfile.religion" class="col-lg-12 col-sm-12">
-                    <h5>Religion: {{ userProfile.religion }} </h5>
-                </div>
+                        <v-card-text>
+                            <v-text-field label="First Name"
+                                            v-model="profileInfo.first_name"></v-text-field>
 
-                <button class="btn btn-primary"> Update Profile </button>
-            </div>
-        </div>
-    </div>
+                            <v-text-field label="Last Name"
+                                            v-model="profileInfo.last_name"></v-text-field>
+
+                            <v-text-field label="Address"
+                                            v-model="profileInfo.address"></v-text-field>
+
+                            <v-text-field label="Email"
+                                            v-model="profileInfo.email"></v-text-field>
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-btn text color="error" @click="profileUpdating = false">Cancel</v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn color="success" type="submit">Update</v-btn>
+                        </v-card-actions>
+                    </v-form>
+                </v-card>
+            </v-dialog>
+    </v-container>
 </template>
 
 
 <script>
 export default {
+
+    data () {
+        return {
+            profileUpdating: false,
+            profileInfo: {}
+        }
+    },
 
     computed: {
         userProfile() {
@@ -47,6 +70,13 @@ export default {
 
     created () {
         this.$store.dispatch('GET_PROFILE', this.$route.params.user_id)
+            .then(() => {
+                this.profileInfo = this.userProfile
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        
     },
 
     methods: {
@@ -61,9 +91,21 @@ export default {
                 })
         },
 
-        createProfile() {
-            this.$router.push('/profile/create/' + this.$route.params.user_id)
+        updateProfile() {
+            const data = {
+                user_id: this.$route.params.user_id,
+                first_name: this.profileInfo.first_name,
+                last_name: this.profileInfo.last_name,
+                address: this.profileInfo.address,
+                email: this.profileInfo.email
+            }
+
+            this.$store.dispatch('UPDATE_PROFILE', data)
+                .then(() => {
+                    this.profileUpdating = false
+                })
         }
+
     }
 }
 </script>
@@ -74,15 +116,14 @@ export default {
         color: #ffffff;
     }
 
-    .image-frame {
-        width: 100%;
-        height: 75%;
+    #profile-name-container h4 {
+        justify-content: center;
+        font-family: 'batmfa';
+        font-size: 1.3em;
     }
 
-    .image-frame img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
+    #modal-title {
+        font-family: 'batmfa';
     }
 
 </style>

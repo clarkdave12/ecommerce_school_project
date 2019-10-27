@@ -1,30 +1,19 @@
 <template>
-    <div class="container mt-2">
-        <div class="row mt-5">
-            <div class="col-lg-3"></div>
+    <div>
+        <v-container>
+            <h3 class="subheading" id="page-title">
+                Login
+            </h3>
+            <v-divider></v-divider>
 
-            <div class="form-group pl-2 pr-3 py-3 col-lg-6 col-sm-12" id="box">
-                <div class="mb-3">
-                    <header>Login</header>
-                </div>
-                <form @submit.prevent="logins()">
-                    <div class="mb-5">
-                        <input placeholder="Email Address" type="text" class="inp" v-model="user.email">
-                        <span class="error" v-if="errorMessage"> {{ errorMessage }} </span>
-                    </div>
-
-                    <input placeholder="Password" type="password" class="inp mb-5" v-model="user.password">
-
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-12">
-                            <button type="submit" class="btn btn-success" id="mybtn">Login</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="col-lg-3"></div>
-        </div>
+            <v-form @submit.prevent="logins()">
+                <v-text-field prepend-icon="email" label="Email" dark v-model="user.email"></v-text-field>
+                <span class="error" v-if="errorMessage"> {{ errorMessage }} <br> </span>
+                <v-text-field prepend-icon="lock" label="Password" dark v-model="user.password" type="password"></v-text-field>
+                <br>
+                <v-btn block color="primary" type="submit">Login</v-btn>
+            </v-form>
+        </v-container>
     </div>
 </template>
 
@@ -40,19 +29,12 @@ export default {
         }
     },
 
-    mounted () {
-
-        bus.$on('login', () => {
-            
-        })
-    },
-
     methods: {
 
         logins() {
             var data = {
                 client_id: 2,
-                client_secret: 'R7wCkSwzME4gyI9OnbbEdTIPQ0uv6e3bfVnB7SXr',
+                client_secret: 'gGqpMfwbKE7qW3nUuheNxku9Nr0FgAhlSW1dhukD',
                 grant_type: 'password',
                 username: this.user.email,
                 password: this.user.password
@@ -85,11 +67,11 @@ export default {
                 })
         },
 
-        login() {
+        /* login() {
 
             var data = {
                 client_id: 2,
-                client_secret: 'R7wCkSwzME4gyI9OnbbEdTIPQ0uv6e3bfVnB7SXr',
+                client_secret: 'gGqpMfwbKE7qW3nUuheNxku9Nr0FgAhlSW1dhukD',
                 grant_type: 'password',
                 username: this.user.email,
                 password: this.user.password
@@ -130,7 +112,7 @@ export default {
                 .catch(error => {
                     this.errorMessage = 'The Email or Password is incorrect'
                 })
-        },
+        }, */
 
         getUserRole (id) {
             
@@ -147,7 +129,7 @@ export default {
     background: #000000;
 }
 
-header {
+#page-title {
     font-family: 'batmfa';
     color: #ffffff;
     font-size: 1.8em;

@@ -1,46 +1,62 @@
 <template>
-    <div class="container">
-        <h1>Cart</h1>
+    <v-container fluid>
+        <h3>Cart</h3>
+        <v-divider></v-divider>
 
-        <div v-for="cart in carts" :key="cart.id" class="row">
-            <!-- product image -->
-            <div class="col-lg-4 col-sm-12">
-                <img :src="'http://localhost:8000/' + cart.image" alt="">
-            </div>
+        <v-expansion-panels dark>
+            <v-expansion-panel v-for="cart in carts" :key="cart.id">
+                <v-expansion-panel-header>
+                    {{ cart.name }}
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                    <v-card flat>
+                        <img :src="'http://localhost:8000/' + cart.image" alt="cart.name">
+                        <v-card-subtitle>
+                            PHP {{ cart.price }} <br />
+                        </v-card-subtitle>
+                        <v-card-subtitle>
+                            QTY {{ cart.quantity }} <br />
+                        </v-card-subtitle>
+                    
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn class="red" @click="removeItem(cart.id)">remove</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
 
-            <!-- Product Info -->
-            <div class="col-lg-4 col-sm-12">
-                <h3> {{ cart.name }} </h3>
-                <h5> Adding Date: {{ cart.created_at }} </h5>
-            </div>
-
-            <!-- Quantity -->
-            <div class="col-lg-2 col-sm-12">
-                <h3> QTY </h3>
-                <h5> {{ cart.quantity }} </h5>
-            </div>
-
-            <div class="col-lg-2 col-sm-12 mb-5">
-                <h3> {{ cart.price }} PHP </h3>
-                <button @click="removeItem(cart.id)" class="btn btn-danger"> Remove </button>
-            </div>
-            <hr>
-        </div>
-    </div>
+        <v-footer fixed dark>
+            <div> <strong>Total Amount: </strong> <br> PHP {{ totalAmount }} </div>
+            <v-spacer></v-spacer>
+            <v-btn class="success"> Checkout </v-btn>
+        </v-footer>
+    </v-container>
 </template>
 
 
 <script>
+import { parse } from 'path';
 export default {
     computed: {
         carts() {
             return this.$store.state.cart
+        },
+
+        totalAmount() {
+            const cart = this.carts
+            let c = 0
+            cart.forEach(ca => {
+                c += parseInt(ca.price)
+            });
+
+            return c
         }
     },
 
     created () {
         this.$store.dispatch('GET_CART', this.$store.state.user.id)
-
         bus.$on('itemRemoved', () => {
             this.$store.dispatch('GET_CART', this.$store.state.user.id)
         })

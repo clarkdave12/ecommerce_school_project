@@ -96,31 +96,39 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $exploded = explode(',', $request->image);
-        $decoded = base64_decode($exploded[1]);
-
-        if(Str::contains($exploded[0], 'jpeg')) {
-            $extension = 'jpg';
-        }
-        else {
-            $extension = 'png';
-        }
-
-        $filename = Str::random(30) . '.' . $extension;
-
-        $path = public_path() . '/' . $filename;
-
-        file_put_contents($filename, $decoded);
-        
-
         $product = Product::find($id);
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->category_id = $request->category_id;
-        $product->image = $filename;
-        $product->save();
+        if($request->image !== NULL) {
+            $exploded = explode(',', $request->image);
+            $decoded = base64_decode($exploded[1]);
+
+            if(Str::contains($exploded[0], 'jpeg')) {
+                $extension = 'jpg';
+            }
+            else {
+                $extension = 'png';
+            }
+
+            $filename = Str::random(30) . '.' . $extension;
+
+            $path = public_path() . '/' . $filename;
+
+            file_put_contents($filename, $decoded);
+
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->category_id = $request->category_id;
+            $product->image = $filename;
+            $product->save();
+        }
+        else {
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->category_id = $request->category_id;
+            $product->save();
+        }
 
         return response()->json(['Message' => 'Updated Successfully'], 200);
     }

@@ -1,52 +1,35 @@
 <template>
-    <div class="container mt-2">
-        <div class="row mt-5">
-            <div class="col-lg-2 col-sm-0"></div>
+    <div>
+        <v-container>
+            <h3 class="subheading" id="page-title">
+                register
+            </h3>
+            <v-divider></v-divider>
 
-                <div class="form-group pl-2 pr-3 py-3 col-lg-8 col-sm-12" id="box">
-                <div class="mb-5">
-                    <header>Create new Account</header>
-                </div>
-                    <form @submit.prevent="register()">
-                        <div class="mb-5">
-                            <input placeholder="First Name" type="text" v-model="user.first_name">
-                            <span class="errors" v-if="errors.first_name"> {{ errors.first_name[0] }} </span>
-                        </div>
+            <v-form @submit.prevent="register()">
+                <v-text-field dark v-model="user.first_name" label="First Name" color="red" prepend-icon="perm_identity"></v-text-field>
+                <span v-if="errors.first_name" class="errors"> {{ errors.first_name[0] }} </span> <br>
+                
+                <v-text-field dark v-model="user.last_name" label="Last Name" color="red" prepend-icon="perm_identity"></v-text-field>
+                <span v-if="errors.last_name" class="errors"> {{ errors.last_name[0] }} </span> <br>
+                
+                <v-textarea dark v-model="user.address" label="Address" color="red" prepend-icon="place"></v-textarea>
+                <span v-if="errors.address" class="errors"> {{ errors.address[0] }} </span> <br>
 
-                        <div class="mb-5">
-                            <input placeholder="Last Name" type="text" v-model="user.last_name">
-                            <span class="errors" v-if="errors.last_name"> {{ errors.last_name[0] }} </span>
-                        </div>
+                <v-text-field dark v-model="user.email" label="Email" color="red" prepend-icon="email"></v-text-field>
+                <span v-if="errors.email" class="errors"> {{ errors.email[0] }} </span><br>
 
-                        <div class="mb-5">
-                            <textarea placeholder="Address" rows="2" v-model="user.address"></textarea>
-                            <span class="errors" v-if="errors.address"> {{ errors.address[0] }} </span>
-                        </div>
-   
-                        <div class="mb-5">
-                            <input placeholder="Email" type="text" v-model="user.email">
-                            <span class="errors" v-if="errors.email"> {{ errors.email[0] }} </span>
-                        </div>
+                <v-text-field dark v-model="user.password" label="Password" color="red" prepend-icon="lock" type="password">
+                </v-text-field>
+                <span v-if="errors.password" class="errors"> {{ errors.password[0] }} </span> <br>
 
-                        <div class="mb-5">
-                            <input placeholder="Password" type="password" v-model="user.password">
-                            <span class="errors" v-if="errors.password"> {{ errors.password[0] }} </span>
-                        </div>
+                <v-text-field dark v-model="confirmPassword" label="Confirm Password" color="red" prepend-icon="lock" type="password">                    
+                </v-text-field>
+                <span v-if="confirmError" class="errors"> {{ confirmError[0] }} </span> <br>
 
-                        <div class="mb-5">
-                            <input placeholder="Confirm Password" type="password" v-model="confirmPassword">
-                            <span class="errors" v-if="confirmError"> {{ confirmError }} </span>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-4 col-sm-12">
-                                <button type="submit" class="btn btn-primary mb-3" id="button-control">Register</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            <div class="col-lg-2 col-sm-0"></div>
-        </div>
+                <v-btn block color="primary" type="submit"> Register </v-btn>
+            </v-form>
+        </v-container>
     </div>
 </template>
 
@@ -96,19 +79,11 @@ export default {
     src: url('../fonts/batmfa.ttf');
 }
 
-#box {
-    background: #000000;
-    border: 3px red solid;
+v-form {
+    color: white;
 }
 
-label {
-    color: #ffffff;
-    font-weight: 500;
-    font-size: 1.1em;
-    letter-spacing: 1px;
-}
-
-header {
+#page-title {
     font-family: 'batmfa';
     color: #ffffff;
     font-weight: 600;
@@ -116,51 +91,8 @@ header {
     letter-spacing: 10px;
 }
 
-input {
-    color: red;
-    font-weight: 300;
-    font-size: 1em;
-    letter-spacing: 1px;
-    background: #000000;
-    border: none;
-    min-width: 100%;
-    border-bottom: 2px solid #323334;
-}
-input:focus {
-    color: red;
-    outline: none;
-    background: #000000;
-    border: #000000;
-    border-bottom: 2px solid #800000;
-}
-
-textarea {
-    color: red;
-    font-weight: 300;
-    font-size: 1em;
-    letter-spacing: 1px;
-    background: #000000;
-    border: none;
-    min-width: 100%;
-    border-bottom: 2px solid #323334;
-}
-
-textarea:focus {
-    color: red;
-    outline: none;
-    background: #000000;
-    border: #000000;
-    border-bottom: 2px solid #800000;
-}
-
 .errors {
     color: #f0e130;
-}
-
-#button-control {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
 }
 
 </style>

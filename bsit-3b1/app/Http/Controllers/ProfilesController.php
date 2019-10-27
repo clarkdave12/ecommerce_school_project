@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Profile;
+use App\User;
 use DB;
 
 class ProfilesController extends Controller
@@ -16,7 +17,7 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-        //
+        return User::find(2);
     }
 
     /**
@@ -68,16 +69,22 @@ class ProfilesController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function updateProfile(Request $request, $user_id) {
+        $profile = User::find($user_id);
+
+        $profile->first_name = $request->first_name;
+        $profile->last_name = $request->last_name;
+        $profile->address = $request->address;
+        $profile->email = $request->email;
+        $profile->save();
+
+        return response()->json(['message' => 'User profile updated successfully'], 200);
+    }
+
     public function show($id)
     {
          $data = DB::table('profiles')
-                    ->join('users', 'users.id', '=', 'profiles.user_id')
+                    ->rightjoin('users', 'users.id', '=', 'profiles.user_id')
                     ->select('users.first_name',
                              'users.last_name',
                              'users.email',
@@ -88,10 +95,10 @@ class ProfilesController extends Controller
                              'profiles.user_id',
                              'profiles.image',
                              'profiles.religion')
-                    ->where('profiles.user_id', $id)
+                    ->where('users.id', $id)
                     ->get();
 
-        return response()->json(['profile' => $data]);
+        return response()->json(['profile' => $data], 200);
     }
 
     /**

@@ -1,36 +1,17 @@
 <template>
-    <div class="container">
-        <h5>Search Bar</h5>
-        <hr>
-        <div class="row">
-            <div v-for="product in products" :key="product.id" class="col-lg-4 col-sm-12">
-                <div class="row box mb-3">
-                    <div class="image-frame col-lg-12 col-sm-12">
-                        <img :src="'http://localhost:8000/' + product.image" :alt="product.name">
-                    </div>
-
-                    <div class="details mb-3 col-lg-12 col-sm-12">
-                        <h3> {{ product.name }} </h3>
-                        <h6> {{ product.price }} PHP </h6>
-                        <p> {{ product.description }} </p>
-
-                        <div class="row">
-                            <div class="col-6 col-sm-6">
-                                <router-link :to="'/admin/product/' + product.id" class="btn btn-warning">Edit</router-link>
-                            </div>
-                            <div class="col-6 col-sm-6">
-                                <button @click="deleteProduct(product.id)" class="btn btn-danger">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-container fluid>
+          
+    </v-container>
 </template>
 
 <script>
 export default {
+
+    data () {
+        return {
+            price: 'PHP 2000',
+        }
+    },
 
     computed: {
         products() {
@@ -55,6 +36,8 @@ export default {
 
     methods: {
         
+        
+
         deleteProduct(id) {
             this.$store.dispatch('DELETE_PRODUCT', id)
                 .then(() => {

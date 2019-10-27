@@ -29,3 +29,10 @@ Route::resource('/feedbacks', 'FeedbackController');
 Route::resource('/carts', 'CartsController');
 Route::resource('/profile', 'ProfilesController');
 Route::get('/user-feedback/{user_id}', 'FeedbackController@getUserFeedback');
+Route::post('/update-profile/{user_id}', 'ProfilesController@updateProfile');
+Route::resource('/messages', 'MessagesController');
+Route::get('/reply/{id}/{message}', 'MessagesController@getReply');
+Route::post('/saveReply', 'MessagesController@saveReply');
+Route::get('/get_products_by_category/{category}', 'LexinController@productByCategory');
+Route::get('/get_product_info/{id}', 'LexinController@productInfo');
+

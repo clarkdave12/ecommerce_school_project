@@ -11,5 +11,9 @@ export const api = {
     feedbacks: apiDomain + 'api/feedbacks',
     carts: apiDomain + 'api/carts',
     userProfile: apiDomain + 'api/profile',
-    userFeedback: apiDomain + 'api/user-feedback'
+    userFeedback: apiDomain + 'api/user-feedback',
+    updateProfile: apiDomain + 'api/update-profile',
+    message: apiDomain + 'api/messages',
+    replyMessage: apiDomain + 'api/reply',
+    saveReply: apiDomain + 'api/saveReply',
 }

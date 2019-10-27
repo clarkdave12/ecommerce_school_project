@@ -1,59 +1,87 @@
+
 <template>
-    <div class="container">
-        <h3 id="page-title">Categories</h3>
-        <hr>
+    <v-container>
+        <h3 class="subheading" id="page-title">
+            categories
+        </h3>
+        <v-divider></v-divider>
 
-        <div class="row">
-            <div class="col-lg-6">
-                <!-- For adding -->
-                <div class="category-controls px-5 py-3 mb-3">
-                    <form @submit.prevent="addCategory()">
-                        <h3 class="control-title"> Add Category </h3>
-                        <input v-model="category.name" type="text" class="my-3 inputs" placeholder="Category name">
+        <v-btn @click="add = !add" small right outlined class="pa-2" dark>Add Category</v-btn>
+                
 
-                        <div class="row">
-                            <div class="col-lg-4 col-sm-12">
-                                <button id="add-btn" type="submit" class="btn btn-success mt-3">Create</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+        <v-layout row wrap>
+            <v-flex xs12 sm6 md4 lg3 v-for="cat in categories" :key="cat.id">
+                
+                <v-card dark class="pa-3 ma-3">
+                    <v-card-text>
+                        <div class="subheading white--text category-name"> {{ cat.name }} </div>
+                    </v-card-text>
 
-                <!-- For Updating -->
-                <div v-if="isUpdating" class="category-controls px-5 py-3 mb-3">
-                    <form @submit.prevent="updateCategory()">
-                        <h3 class="control-title"> Update Category </h3>
-                        <input v-model="update.name" type="text" class="inputs" placeholder="New Category name">
+                    <v-card-actions>
+                        <v-btn small color="warning" @click="forUpdate(cat.id, cat.name)"> edit </v-btn>
+                        <v-btn small color="red" @click="deleteCategory(cat.id)">delete</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-flex>
+        </v-layout>
 
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-12">
-                                <button type="submit" class="btn btn-success mt-3" id="update-btn">Update</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <!-- Category List -->
-                <div class="row my-3" v-for="cat in categories" :key="cat.id">
-                    <div class="col-lg-6 py-2">
-                        <h3 class="category-name"> {{ cat.name }} </h3>
-                    </div>
-                    <div class="col-lg-6">
-                        <div id="table-actions" class="row">
-                            <div class="col-lg-6 py-2">
-                                <div> <button @click="forUpdate(cat.id, cat.name)" class="btn btn-warning btn-controls"> Edit </button> </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 py-2">
-                                <button @click="deleteCategory(cat.id)" class="btn btn-danger btn-controls"> Delete </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div v-if="categories == 0" class="mt-3">
+            <h4> No categories yet </h4>
         </div>
-    </div>
+
+        <!-- For Adding Category -->
+        <v-dialog v-model="add" scrollable>
+            <v-card dark>
+                <form @submit.prevent="addCategory()">
+                    <v-card-title>
+                        <span class="headline"> Add Category </span>
+                    </v-card-title>
+
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-text-field v-model="category.name" dark label="Category Name"></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn text type="submit"> save </v-btn>
+                    </v-card-actions>
+                </form>
+            </v-card>
+        </v-dialog>
+
+        <!-- For Updating Category -->
+        <v-dialog v-model="isUpdating" scrollable>
+            <v-card dark>
+                <form @submit.prevent="updateCategory()">
+                    <v-card-title>
+                        <span class="headline"> Update Category </span>
+                    </v-card-title>
+
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-text-field v-model="update.name" dark label="Category Name"></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn text type="submit"> save </v-btn>
+                    </v-card-actions>
+                </form>
+            </v-card>
+        </v-dialog>
+
+    </v-container>
 </template>
 
 <script>
@@ -63,7 +91,7 @@ export default {
             category: {
                 name: ''
             },
-
+            add: false,
             isUpdating: false,
 
             update: {
@@ -93,6 +121,7 @@ export default {
                 .then(() => {
                     this.category.name = ''
                     bus.$emit('category-show')
+                    this.add = false
                 })
                 .catch(error => {
                     console.log(error)

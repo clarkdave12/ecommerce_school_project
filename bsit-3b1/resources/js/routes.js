@@ -16,6 +16,8 @@ import Cart from './pages/Cart.vue';
 import Profile from './pages/Profile.vue';
 import ProfileCreate from './pages/ProfileCreate.vue';
 import UserFeedback from './pages/UserFeedback.vue';
+import Message from './pages/Message.vue';
+import Lexin from './lexin/Lexin.vue';
 
 export const routes = [
     /* For Admin */
@@ -98,4 +100,13 @@ export const routes = [
         component: UserFeedback,
         meta: { forUser: true }
     },
+    {
+        path: '/messages/:user_id',
+        component: Message,
+        meta: { forUser: true }
+    },
+    {
+        path: '/lexin',
+        component: Lexin
+    }
 ]

@@ -1,72 +1,160 @@
 <template>
-    <nav class="navbar navbar-light navbar-expand-lg py-2 px-3">
-        <router-link to="/" class="navbar-brand mr-3" id="brand-name"> pctech </router-link>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#content">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div>
+        <v-app-bar :dark="darkMode">
+            <v-toolbar-title>
+                <router-link id="brand-name" to="/" tag="span">PCTECH</router-link>
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn outlined x-small class="mx-3 hidden-sm-and-down">
+                <router-link to="/products" tag="span" style="cursor: pointer">Products</router-link>
+            </v-btn>
 
-        <div class="collapse navbar-collapse" id="content">
-            <ul class="navbar-nav mr-auto" v-if="isAdmin === false">
-                <li class="nav-item py-2">
-                    <router-link to="/products" class="nav-link js-scroll-trigger"> Products </router-link>
-                </li>
-                <li class="nav-item py-2">
-                    <a href="" class="nav-link js-scroll-trigger">Contact Us</a>
-                </li>
-                <li class="nav-item py-2">
-                    <a href="" class="nav-link js-scroll-trigger">About Us</a>
-                </li>
-            </ul>
+            <!-- Admin -->
+            <v-btn v-if="isAuth && isAdmin" outlined x-small class="mx-3 hidden-sm-and-down">
+                <router-link to="/admin/categories" tag="span" style="cursor: pointer">categories</router-link>
+            </v-btn>
 
-            <ul class="navbar-nav mr-auto" v-if="isAdmin === true">
-                <!-- Admin Controls -->
-                <li class="nav-item py-2">
-                    <router-link to="/admin/categories" class="nav-link js-scroll-trigger" id="link"> Categories </router-link>
-                </li>
-                <!-- <li class="nav-item py-2">
-                    <router-link to="/admin/users" class="nav-link js-scroll-trigger" id="link"> Users </router-link>
-                </li> -->
-                <li class="nav-item py-2">
-                    <router-link to="/admin/manage_feedbacks" class="nav-link js-scroll-trigger" id="link"> Feedbacks </router-link>
-                </li>
-                <li class="nav-item py-2">
-                    <router-link to="/admin/products" class="nav-link js-scroll-trigger" id="link"> Products </router-link>
-                </li>
-                <li class="nav-item py-2">
-                    <router-link to="/admin/products/add" class="nav-link js-scroll-trigger" id="link"> Add Product </router-link>
-                </li>
-            </ul>
+            <!-- User -->
+            <v-btn v-if="isAuth && !isAdmin" outlined x-small class="mx-3 hidden-sm-and-down">
+                <router-link :to="'/profile/' + user_id" tag="span" style="cursor: pointer">Profile</router-link>
+            </v-btn>
 
-            <ul class="navbar-nav ml-auto" v-if="isAuth === false">
-                <li class="nav-item mr-3 py-2">
-                    <router-link to="/register" class="nav-link js-scroll-trigger">Register</router-link>
-                </li>
-                <li class="nav-item mr-3 py-2">
-                    <router-link to="/login" class="nav-link js-scroll-trigger">Login</router-link>
-                </li>
-            </ul>
+            <!-- Guest -->
+            <v-btn v-if="!isAuth" outlined x-small class="mx-3 hidden-sm-and-down">
+                <router-link to="/login" tag="span" style="cursor: pointer">Login</router-link>
+            </v-btn>
 
-            <ul class="navbar-nav ml-auto" v-if="isAuth === true">
-                <li v-if="! isAdmin" class="nav-item mr-3 py-2">
-                    <router-link :to="'/profile/' + user_id" class="nav-link js-scroll-trigger">Profile</router-link>
-                </li>
-                <li v-if="! isAdmin" class="nav-item mr-3 py-2">
-                    <router-link :to="'/user_feedback/' + user_id" class="nav-link js-scroll-trigger">Feedbacks</router-link>
-                </li>
-                <li v-if="! isAdmin" class="nav-item mr-3 py-2">
-                    <router-link :to="'/cart/' + user_id" class="nav-link js-scroll-trigger">Cart</router-link>
-                </li>
-                <li v-if="isAdmin && name" class="nav-item py-2">
-                    <a href="" class="nav-link js-scroll-trigger"> {{ name }} </a>
-                </li>
-                <li class="nav-item py-2">
-                    <a @click="logout()" class="nav-link js-scroll-trigger" role="button">Logout</a>
-                    <!-- <button @click="logout()" class="btn nav-link js-scroll-trigger">Logout</button> -->
-                </li>
-            </ul>
-        </div>
-    </nav>
+            <v-btn v-if="!isAuth" outlined x-small class="mx-3 hidden-sm-and-down">
+                <router-link to="/register" tag="span" style="cursor: pointer">Register</router-link>
+            </v-btn>
+
+            <!-- Humburger menu -->
+            <v-btn icon class="hidden-md-and-up" @click="drawer = !drawer">
+                <v-icon>menu</v-icon>
+            </v-btn>
+        </v-app-bar>
+
+
+        <v-navigation-drawer class="hidden-md-and-up" v-model="drawer" app dark>
+
+            <v-layout column align-center v-if="isAuth">
+                <v-flex class="mt-5">
+                    <v-list-item-avatar size="80">
+                        <img src="http://localhost:8000/images/monitor.jpeg" alt="profile">
+                    </v-list-item-avatar>    
+
+                    <p align-center class="white--text subheading mt-1">
+                        Clark Dave Ibarreta
+                    </p>
+
+                    <v-btn rounded small @click="goToProfile">
+                        view profile
+                    </v-btn>
+                </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
+
+            <!-- PRODUCTS -->
+            <v-list-item link to="/products">
+                <v-list-item-icon>
+                    <v-icon>shop</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Products
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- CATEGORY -->
+            <v-list-item link to="/admin/categories" v-if="isAuth && isAdmin">
+                <v-list-item-icon>
+                    <v-icon>category</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Categories
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- MESSAGING -->
+            <v-list-item link :to="'/messages/' + user_id" v-if="isAuth && !isAdmin">
+                <v-list-item-icon>
+                    <v-icon>chat</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Message
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- LEXIN -->
+            <v-list-item link to="/lexin" v-if="isAuth && !isAdmin">
+                <v-list-item-icon>
+                    <v-icon>android</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        LEXIN
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- SHOPPING CART -->
+            <v-list-item link :to="'/cart/' + user_id" v-if="isAuth && !isAdmin">
+                <v-list-item-icon>
+                    <v-icon>shopping_cart</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Cart
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- LOGIN -->
+            <v-list-item link to="/login" v-if="!isAuth">
+                <v-list-item-icon>
+                    <v-icon>account_circle</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Login
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- REGISTER -->
+            <v-list-item link to="/register" v-if="!isAuth">
+                <v-list-item-icon>
+                    <v-icon>how_to_reg</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Register
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- LOGOUT -->
+            <template v-slot:append v-if="isAuth">
+                <div class="pa-2">
+                    <v-btn block @click="logout()">Logout</v-btn>
+                </div>
+            </template>
+        </v-navigation-drawer>
+    </div>
 </template>
+
 
 <script>
 export default {
@@ -74,8 +162,9 @@ export default {
         return {
             isAuth: false,
             isAdmin: false,
-            user_id: ''
-            
+            user_id: '',
+            darkMode: true,
+            drawer: false,
         }
     },
 
@@ -125,6 +214,10 @@ export default {
             }
         },
 
+        goToProfile() {
+            this.$router.push('/profile/' + this.user_id)
+        },
+
         logout() {
             localStorage.removeItem('token')
             bus.$emit('logout')
@@ -145,8 +238,9 @@ export default {
     #brand-name {
         color: red;
         font-weight: 900;
-        font-size: 2em;
+        font-size: 1.5em;
         font-family: 'batmfa';
+        cursor: pointer;
     }
 
     .navbar-nav .nav-item .nav-link {

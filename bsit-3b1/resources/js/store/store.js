@@ -17,9 +17,15 @@ export const store = new Vuex.Store({
         userFeedbacks: [],
         allFeedbacks: [],
         profile: [],
-        categories: []
+        categories: [],
+        messages: [],
+        loader: false
     },
     mutations: {
+        SET_LOADER: (state, data) => {
+            state.loader = data
+        },
+
         SET_TOKEN: (state, data) => {
             state.token = data
         },
@@ -58,18 +64,25 @@ export const store = new Vuex.Store({
 
         SET_ALL_FEEDBACKS: (state, data) => {
             state.allFeedbacks = data
+        },
+
+        SET_MESSAGES: (state, data) => {
+            state.messages = data
         }
     },
     actions: {
 
         LOGIN: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.post(api.login, payload)
                     .then(({data}) => {
                         commit('SET_TOKEN', data)
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })      
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })
@@ -118,52 +131,64 @@ export const store = new Vuex.Store({
             })
         },
 
-        REGISTER: (context, payload) => {
+        REGISTER: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.post(api.register, payload)
                     .then(() => {
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error.response.data)
                     })
             })
         },
 
         GET_PRODUCTS: ({commit}) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.products)
                     .then(({data}) => {
-                        commit('SET_PRODUCTS', data.products)            
+                        commit('SET_PRODUCTS', data.products)   
+                        commit('SET_LOADER', false)         
                         resolve(true)
                     })
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })
         },
 
         GET_PRODUCT_INFO: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.products + '/' + payload)
                     .then(({data}) => {
                         commit('SET_PRODUCT_INFO', data.product)
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
-                        console.log(error)
+                        commit('SET_LOADER', false)
+                        reject(error)
                     })
             })
         },
 
         GET_FEEDBACKS: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.feedbacks + '/' + payload)
                     .then(({data}) => {
                         commit('SET_FEEDBACKS', data.feedbacks)
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })
@@ -194,36 +219,58 @@ export const store = new Vuex.Store({
         },
 
         GET_CART: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.carts + '/' + payload)
                     .then(({data}) => {
                         commit('SET_CART', data)
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })
         },
 
         GET_USER_FEEDBACKS: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.userFeedback + '/' + payload)
                     .then(({data}) => {
                         commit('SET_USER_FEEDBACKS', data.feedbacks)
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })
         },
 
         GET_PROFILE: ({commit}, payload) => {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.userProfile + '/' + payload)
                     .then(({data}) => {
                         commit('SET_PROFILE', data.profile[0])
+                        commit('SET_LOADER', false)
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        commit('SET_LOADER', false)
+                        reject(error)
+                    })
+            })
+        },
+
+        UPDATE_PROFILE: ({commit}, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.post(api.updateProfile + '/' + payload.user_id, payload)
+                    .then(() => {
                         resolve(true)
                     })
                     .catch(error => {
@@ -232,17 +279,68 @@ export const store = new Vuex.Store({
             })
         },
 
+        GET_MESSAGES: ({commit}, payload) => {
 
+            return new Promise((resolve, reject) => {
+                axios.get(api.message + '/' + payload)
+                    .then(({data}) => {
+                        commit('SET_MESSAGES', data.messages)
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+
+        SEND_MESSAGE: ({commit}, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.post(api.message, payload)
+                    .then(() => {
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+
+        GET_REPLY: ({commit}, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.get(api.replyMessage + '/' + payload.receiver_id + '/' + payload.message)
+                    .then(response => {
+                        const m = {
+                            message: response.data,
+                            receiver_id: payload.receiver_id
+                        }
+                        axios.post(api.saveReply, m)
+                            .then(() => {
+                                resolve(true)
+                            })
+                            .catch(error => {
+                                reject(error)
+                            })
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
 
         /* For the Admin */
         GET_CATEGORIES: ({commit})=> {
+            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.categories)
                     .then(({data}) => {
                         commit('SET_CATEGORIES', data)
+                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
+                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })
@@ -302,7 +400,7 @@ export const store = new Vuex.Store({
         UPDATE_PRODUCT: ({commit}, payload) => {
 
             return new Promise((resolve, reject) => {
-                axios.put(api.products + '/' + payload.product_id, payload)
+                axios.put(api.products + '/' + payload.id, payload)
                     .then(() => {
                         resolve(true)
                     })
