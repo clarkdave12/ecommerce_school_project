@@ -47,8 +47,12 @@
                         Clark Dave Ibarreta
                     </p>
 
-                    <v-btn rounded small @click="goToProfile">
+                    <v-btn rounded small @click="goToProfile" v-if="isAuth && !isAdmin">
                         view profile
+                    </v-btn>
+
+                    <v-btn rounded small to="/admin" v-if="isAuth && isAdmin">
+                        Dashboard
                     </v-btn>
                 </v-flex>
             </v-layout>

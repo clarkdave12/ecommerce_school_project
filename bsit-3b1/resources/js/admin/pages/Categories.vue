@@ -13,12 +13,13 @@
             <v-flex xs12 sm6 md4 lg3 v-for="cat in categories" :key="cat.id">
                 
                 <v-card dark class="pa-3 ma-3">
+                    <img class="view-image" :src="'http://localhost:8000/' + cat.image" :alt="cat.name">
                     <v-card-text>
                         <div class="subheading white--text category-name"> {{ cat.name }} </div>
                     </v-card-text>
 
                     <v-card-actions>
-                        <v-btn small color="warning" @click="forUpdate(cat.id, cat.name)"> edit </v-btn>
+                        <v-btn small color="warning" @click="forUpdate(cat.id, cat.name, cat.image)"> edit </v-btn>
                         <v-btn small color="red" @click="deleteCategory(cat.id)">delete</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -42,6 +43,12 @@
                             <v-row>
                                 <v-col cols="12" sm="6" md="4">
                                     <v-text-field v-model="category.name" dark label="Category Name"></v-text-field>
+
+                                    <v-btn class="primary my-3" @click="onPickFile">Choose Image</v-btn>
+                                    <input type="file" style="display: none" ref="fileInput" accept="image/*"
+                                             @change="imageChanged">
+                                    <v-img :src="category.image" height="100" width="100" class="mb-3"></v-img>
+
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -68,6 +75,11 @@
                             <v-row>
                                 <v-col cols="12" sm="6" md="4">
                                     <v-text-field v-model="update.name" dark label="Category Name"></v-text-field>
+
+                                    <v-btn class="primary my-3" @click="updateOnPickFile">Choose Image</v-btn>
+                                    <input type="file" style="display: none" ref="updateFileInput" accept="image/*"
+                                             @change="updateImageChanged">
+                                    <img :src="update.image" id="update-image" class="mb-3">
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -75,7 +87,7 @@
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn text type="submit"> save </v-btn>
+                        <v-btn text type="submit"> UPDATE </v-btn>
                     </v-card-actions>
                 </form>
             </v-card>
@@ -89,14 +101,16 @@ export default {
     data () {
         return {
             category: {
-                name: ''
+                name: '',
+                image: ''
             },
             add: false,
             isUpdating: false,
 
             update: {
                 name: '',
-                id: ''
+                id: '',
+                image: ''
             },
         }
     },
@@ -124,13 +138,14 @@ export default {
                     this.add = false
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log(error.response)
                 })
         },
 
-        forUpdate (id, name) {
+        forUpdate (id, name, image) {
             this.update.id = id
             this.update.name = name
+            this.update.image = image
             this.isUpdating = true
         },
 
@@ -142,7 +157,7 @@ export default {
                     bus.$emit('category-show')
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log(error.response)
                 })
         },
 
@@ -155,6 +170,34 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
+        },
+
+        onPickFile () {
+            this.$refs.fileInput.click()
+        },
+
+        imageChanged(e) {
+            
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(e.target.files[0])
+            fileReader.onload = (e) => {
+                this.category.image = e.target.result
+            }
+        },
+
+        updateOnPickFile () {
+            this.$refs.updateFileInput.click()
+        },
+
+        updateImageChanged(e) {
+
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(e.target.files[0])
+            fileReader.onload = (e) => {
+                this.update.image = e.target.result
+            }
         }
     }
 }
@@ -163,6 +206,15 @@ export default {
 
 
 <style scoped>
+
+    .view-image {
+        width: 100%;
+    }
+
+    #update-image {
+        width: 100%;    
+    }
+
     #page-title {
         font-family: 'batmfa';
         color: #800000;

@@ -36,3 +36,4 @@ Route::post('/saveReply', 'MessagesController@saveReply');
 Route::get('/get_products_by_category/{category}', 'LexinController@productByCategory');
 Route::get('/get_product_info/{id}', 'LexinController@productInfo');
 
+Route::resource('/specs', 'SpecsController');

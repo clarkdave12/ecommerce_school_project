@@ -19,6 +19,7 @@ export const store = new Vuex.Store({
         profile: [],
         categories: [],
         messages: [],
+        specs: [],
         loader: false
     },
     mutations: {
@@ -68,6 +69,10 @@ export const store = new Vuex.Store({
 
         SET_MESSAGES: (state, data) => {
             state.messages = data
+        },
+
+        SET_SPECS: (state, data) => {
+            state.specs = data
         }
     },
     actions: {
@@ -415,6 +420,20 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.delete(api.products + '/' + payload)
                     .then(() => {
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+
+        GET_SPECS: ({commit}, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.get(api.specs + '/' + payload)
+                    .then(({data}) => {
+                        commit('SET_SPECS', data)
                         resolve(true)
                     })
                     .catch(error => {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
+use Str;
 
 class CategoriesController extends Controller
 {
@@ -35,8 +36,26 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $exploded = explode(',', $request->image);
+        $decoded = base64_decode($exploded[1]);
+
+        if(Str::contains($exploded[0], 'jpeg')) {
+            $extension = 'jpg';
+        }
+        else {
+            $extension = 'png';
+        }
+
+        $filename = Str::random(30) . '.' . $extension;
+
+        $path = public_path() . '/' . $filename;
+
+        file_put_contents($filename, $decoded);
+
         $category = new Category();
+        
         $category->name = $request->name;
+        $category->image = $filename;
         $category->save();
 
         return response()->json(['message' => 'Added'], 200);
@@ -75,11 +94,39 @@ class CategoriesController extends Controller
     {
         $category = Category::find($id);
 
-        $category->name = $request->name;
+        if($request->image !== NULL) {
 
-        $category->save();
+            $exploded = explode(',', $request->image);
+            $decoded = base64_decode($exploded[1]);
 
-        return response()->json(['message' => 'Updated Successfully'], 200);
+            if(Str::contains($exploded[0], 'jpeg')) {
+                $extension = 'jpg';
+            }
+            else if(Str::contains($exploded[0], 'jpg')) {
+                $extension = 'jpg';
+            }
+            else {
+                $extension = 'png';
+            }
+
+            $filename = Str::random(30) . '.' . $extension;
+
+            $path = public_path() . '/' . $filename;
+
+            file_put_contents($filename, $decoded);
+
+            $category->name = $request->name;
+            $category->image = $filename;
+            $category->save();
+
+            return response()->json(['message' => 'Updated Successfully'], 200);
+        }
+        else {
+            $category->name = $request->name;
+            $category->save();
+
+            return response()->json(['message' => 'Updated Successfully'], 200);
+        }
     }
 
     /**

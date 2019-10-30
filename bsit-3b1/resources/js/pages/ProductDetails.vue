@@ -17,14 +17,18 @@
                     <br>
                 PHP {{ product.price }}
             </v-card-subtitle>
-
+            
             <v-card-text>
                 <strong>DESCRIPTION</strong> <br>
                 {{ product.description }}
             </v-card-text>
+            <v-card-actions>
+                <v-btn :to="'/specs/' + product.id" color="success"> Show Specs </v-btn>
+            </v-card-actions>
         </v-card>
 
-        <v-btn block class="my-4" color="primary" @click="isOrdering = !isOrdering"> Add to Cart </v-btn>
+        <v-btn v-if="isAuth && !isAdmin" block class="my-4" color="primary" @click="isOrdering = !isOrdering"> Add to Cart </v-btn>
+        <v-btn v-else-if="!isAuth && !isAdmin" block class="my-4" color="primary" @click="notAuth"> Add to Cart </v-btn>
 
         <!-- Ordering Process-->
         <v-dialog v-model="isOrdering">
@@ -48,7 +52,7 @@
         </v-dialog>
 
         <!-- Feedbacks -->
-        <v-card dark>
+        <v-card dark class="mt-3">
             <v-card-title>
                 <h4 id="feedback-title"> Feedbacks </h4>
             </v-card-title>
@@ -69,8 +73,9 @@
             </v-card-text>
         </v-card>
 
-        <v-textarea v-model="comment" label="Comment" class="my-3" dark></v-textarea>
-        <v-btn block class="success" @click="postFeedback()">Comment</v-btn>
+        <v-textarea v-if="isAuth && !isAdmin" v-model="comment" label="Comment" class="my-3" dark></v-textarea>
+        <v-btn block class="success" v-if="isAuth && !isAdmin" @click="postFeedback()">Comment</v-btn>
+        <v-btn block class="success" v-else-if="!isAuth && !isAdmin" to="/login" tag="span">Comment</v-btn>
 
     </v-container>
 </template>
@@ -84,6 +89,8 @@ export default {
             comment: '',
             ratings: 3,
             isOrdering: false,
+            isAuth: false,
+            isAdmin: false,
         }
     },
 
@@ -107,6 +114,23 @@ export default {
         this.$store.dispatch('GET_PRODUCT_INFO', this.$route.params.id)
         this.$store.dispatch('GET_FEEDBACKS', this.$route.params.id)
 
+        if(localStorage.getItem('token')) {
+            this.$store.dispatch('USER_DATA')
+                .then(() => {
+                    if(this.$store.state.user.role == 'User') {
+                        this.isAuth = true
+                        this.isAdmin = false
+                    }
+                    else if(this.$store.state.user.role == 'Admin') {
+                        this.isAdmin = true
+                    }
+                })
+        }
+        else {
+            this.isAuth = false
+        }
+
+
         bus.$on('feedbackPosted', () => {
             this.comment = ''
             this.$store.dispatch('GET_FEEDBACKS', this.$route.params.id)
@@ -118,6 +142,11 @@ export default {
     },
 
     methods: {
+
+        notAuth() {
+            this.$router.push('/login')
+        },
+
         order() {
             
             const data = {

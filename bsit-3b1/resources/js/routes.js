@@ -6,6 +6,7 @@ import AdminUsers from './admin/pages/Users.vue';
 import AddProduct from './admin/pages/AddProduct.vue';
 import ManageFeedbacks from './admin/pages/ManageFeedbacks.vue';
 import EditProduct from './admin/pages/EditProduct.vue';
+import Specs from './admin/pages/Specs.vue';
 
 import Home from './pages/Home.vue';
 import Register from './pages/Register.vue';
@@ -55,6 +56,10 @@ export const routes = [
         path: '/admin/manage_feedbacks',
         component: ManageFeedbacks,
         meta: { forAdmin: true }
+    },
+    {
+        path: '/specs/:product_id',
+        component: Specs,
     },
 
     /* Other Routes */

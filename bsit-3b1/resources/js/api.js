@@ -16,4 +16,5 @@ export const api = {
     message: apiDomain + 'api/messages',
     replyMessage: apiDomain + 'api/reply',
     saveReply: apiDomain + 'api/saveReply',
+    specs: apiDomain + 'api/specs'
 }

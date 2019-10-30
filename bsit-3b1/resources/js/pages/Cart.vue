@@ -38,8 +38,11 @@
 
 <script>
 import { parse } from 'path';
+
 export default {
+
     computed: {
+
         carts() {
             return this.$store.state.cart
         },
