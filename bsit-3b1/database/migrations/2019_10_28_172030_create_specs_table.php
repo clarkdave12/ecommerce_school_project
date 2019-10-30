@@ -16,6 +16,7 @@ class CreateSpecsTable extends Migration
         Schema::create('specs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('product_id')->unsigned();
+            $table->string('label');
             $table->text('specs');
             $table->timestamps();
         });
