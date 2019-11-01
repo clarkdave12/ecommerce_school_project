@@ -162,7 +162,7 @@ export const store = new Vuex.Store({
                     })
                     .catch(error => {
                         commit('SET_LOADER', false)
-                        reject(error.response.data)
+                        console.log(error.response)
                     })
             })
         },

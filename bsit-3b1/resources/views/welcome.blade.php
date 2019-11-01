@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Laravel</title>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <link rel="stylesheet" href=" {{ asset('css/app.css') }} ">
     </head>
     <body>

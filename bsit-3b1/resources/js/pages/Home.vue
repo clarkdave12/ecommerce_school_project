@@ -3,8 +3,19 @@
 
         <h3 id="page-title">Products</h3>
         <v-divider></v-divider>
+        
+        <v-row>
+            <v-col>
+                <AddProduct v-if="isAuth && isAdmin"></AddProduct>
+            </v-col>
+        </v-row>
 
-        <AddProduct v-if="isAuth && isAdmin"></AddProduct>
+        <v-row>
+            <input @keyup="searchProduct" type="text" id="search-bar" placeholder="Search Product" v-model="search">
+            <v-btn icon small dark @click="searchProduct">
+                <v-icon>search</v-icon>
+            </v-btn>
+        </v-row>
 
         <!-- Product List -->
         <v-row v-for="product in products" :key="product.id" sm="12">
@@ -96,6 +107,7 @@ export default {
             user_id: '',
             quantity: 1,
             isAddingToCart: false,
+            search: '',
         }
     },
 
@@ -125,6 +137,21 @@ export default {
     },
 
     methods: {
+
+        searchProduct() {
+
+            const data = {
+                search: this.search
+            }
+
+            axios.post(api.productSearch, data)
+                .then(({data}) => {
+                    this.$store.commit('SET_PRODUCTS', data)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+        },
 
         gotoDetails(id) {
             this.$router.push('/product_details/' + id)
@@ -229,6 +256,22 @@ export default {
 
     .product-image {
         width: 100%;
+    }
+
+    #search-bar {
+        background: #aaaaaa;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+        color: black;
+        width: 85%;
+        margin-right: 13px;
+        caret-color: black;
+        border-radius: 20px;
+    }
+
+    #search-bar:focus {
+        outline: none;
     }
 
 </style>

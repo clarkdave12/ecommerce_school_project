@@ -8,7 +8,7 @@
 
             <v-form @submit.prevent="register()">
                 <v-text-field dark v-model="user.first_name" label="First Name" color="red" prepend-icon="perm_identity"></v-text-field>
-                <span v-if="errors.first_name" class="errors"> {{ errors.first_name[0] }} </span> <br>
+                <span v-if="errors.first_name" class="errors"> {{ errors.first_name }} </span> <br>
                 
                 <v-text-field dark v-model="user.last_name" label="Last Name" color="red" prepend-icon="perm_identity"></v-text-field>
                 <span v-if="errors.last_name" class="errors"> {{ errors.last_name[0] }} </span> <br>
@@ -27,6 +27,12 @@
                 </v-text-field>
                 <span v-if="confirmError" class="errors"> {{ confirmError[0] }} </span> <br>
 
+                <v-row class="mb-3">
+                    <v-col sm="12">
+                        <vue-recaptcha ref="captcha" @verify="onVerify" size="small" theme="dark" sitekey="6Ld1ncAUAAAAAA6plTp_wHDP5bwIqehfUJZUBTjh"></vue-recaptcha>
+                    </v-col>
+                </v-row>
+
                 <v-btn block color="primary" type="submit"> Register </v-btn>
             </v-form>
         </v-container>
@@ -34,7 +40,15 @@
 </template>
 
 <script>
+
+import VueRecaptcha from 'vue-recaptcha'
+
 export default {
+
+    components: {
+        VueRecaptcha,
+    },
+
     data () {
         return {
             user: {
@@ -42,8 +56,10 @@ export default {
                 last_name: '',
                 address: '',
                 email: '',
-                password: ''
+                password: '',
+                captchaToken: '',
             },
+            app_key: process.env.MIX_RECAPTCHA_KEY,
             confirmPassword: '',
             errors: {},
             confirmError: ''
@@ -51,7 +67,29 @@ export default {
     },
 
     methods: {
+
+        onVerify(response) {
+            this.user.captchaToken = response
+        },
+
         register () {
+        
+            axios.post('http://localhost:8000/api/validate', this.user)
+                .then(({data}) => {
+                    if(data.success) {
+                        this.signup()
+                    }
+                    else {
+                        alert('Please complete the ReCaptcha to verify that you are human')
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+
+        signup() {
+
             if(this.user.password !== this.confirmPassword) {
                 this.confirmError = 'The password do not matched'
             }
@@ -63,7 +101,7 @@ export default {
                         this.$router.push('/login')
                     })
                     .catch(error => {
-                        console.log(error)
+                        console.log(error.response)
                         this.errors = error.errors
                     })
             }
@@ -81,6 +119,11 @@ export default {
 
 v-form {
     color: white;
+}
+
+#captcha {
+    height: 100%;
+    width: 100%;
 }
 
 #page-title {

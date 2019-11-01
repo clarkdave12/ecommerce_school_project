@@ -15,7 +15,7 @@
             </div>
         </v-sheet>
 
-        <v-footer dark fixed class="py-2">
+        <v-footer dark fixed class="py-2 mt-3">
                 <input v-model="messageData.message" type="text" id="text-box" placeholder="Your message...">
                 <v-btn icon @click="send">
                     <v-icon>send</v-icon>
@@ -116,9 +116,9 @@ export default {
 }
 
 #chat-box {
-    height: 100%;
+    height: 80%;
     width: 100%;
-    max-height: 100vh;
+    max-height: 80vh;
     overflow: scroll;
 }
 

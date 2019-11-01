@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 use Illuminate\Support\Str;
+use DB;
 
 class ProductsController extends Controller
 {
@@ -146,5 +147,10 @@ class ProductsController extends Controller
         $product->delete();
 
         return response()->json(['message' => 'Product Deleted'], 200);
+    }
+
+    public function productSearch(Request $request) 
+    {
+        return Product::where('name', 'like', '%' . $request->search . '%')->get();
     }
 }

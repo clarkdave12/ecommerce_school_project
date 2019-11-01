@@ -40,3 +40,5 @@ Route::resource('/specs', 'SpecsController');
 Route::resource('/messages', 'MessagesController');
 Route::get('/message_admin', 'MessagesController@messageAdmin');
 Route::get('/message_user', 'MessagesController@messageUSer');
+Route::post('/product_search', 'ProductsController@productSearch');
+Route::post('/validate', 'AppController@validateCaptcha');

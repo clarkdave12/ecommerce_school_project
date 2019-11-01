@@ -2699,6 +2699,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3024,6 +3028,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3037,7 +3052,8 @@ __webpack_require__.r(__webpack_exports__);
       isAdmin: false,
       user_id: '',
       quantity: 1,
-      isAddingToCart: false
+      isAddingToCart: false,
+      search: ''
     };
   },
   computed: {
@@ -3062,18 +3078,32 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    searchProduct: function searchProduct() {
+      var _this2 = this;
+
+      var data = {
+        search: this.search
+      };
+      axios.post(api.productSearch, data).then(function (_ref) {
+        var data = _ref.data;
+
+        _this2.$store.commit('SET_PRODUCTS', data);
+      })["catch"](function (error) {
+        console.log(error.response);
+      });
+    },
     gotoDetails: function gotoDetails(id) {
       this.$router.push('/product_details/' + id);
     },
     addToCart: function addToCart(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$store.dispatch('GET_PRODUCT_INFO', id).then(function () {
-        _this2.isAddingToCart = true;
+        _this3.isAddingToCart = true;
       });
     },
     order: function order() {
-      var _this3 = this;
+      var _this4 = this;
 
       var data = {
         quantity: this.quantity,
@@ -3083,7 +3113,7 @@ __webpack_require__.r(__webpack_exports__);
       };
       this.$store.dispatch('ADD_TO_CART', data).then(function () {
         alert('Added to Cart');
-        _this3.isAddingToCart = false;
+        _this4.isAddingToCart = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -3096,28 +3126,28 @@ __webpack_require__.r(__webpack_exports__);
       this.isUpdating = true;
     },
     setUser: function setUser() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (localStorage.getItem('token')) {
         this.$store.commit('SET_LOADER', true);
         this.$store.dispatch('USER_DATA').then(function () {
-          if (_this4.$store.state.user.role == 'Admin') {
-            _this4.isAuth = true;
-            _this4.isAdmin = true;
-            _this4.user_id = _this4.$store.state.user.id;
+          if (_this5.$store.state.user.role == 'Admin') {
+            _this5.isAuth = true;
+            _this5.isAdmin = true;
+            _this5.user_id = _this5.$store.state.user.id;
 
-            _this4.$store.commit('SET_LOADER', false);
-          } else if (_this4.$store.state.user.role == 'User') {
-            _this4.isAuth = true;
-            _this4.isAdmin = false;
-            _this4.user_id = _this4.$store.state.user.id;
+            _this5.$store.commit('SET_LOADER', false);
+          } else if (_this5.$store.state.user.role == 'User') {
+            _this5.isAuth = true;
+            _this5.isAdmin = false;
+            _this5.user_id = _this5.$store.state.user.id;
 
-            _this4.$store.commit('SET_LOADER', false);
+            _this5.$store.commit('SET_LOADER', false);
           } else {
-            _this4.isAuth = false;
-            _this4.isAdmin = false;
+            _this5.isAuth = false;
+            _this5.isAdmin = false;
 
-            _this4.$store.commit('SET_LOADER', false);
+            _this5.$store.commit('SET_LOADER', false);
           }
         });
       }
@@ -3683,6 +3713,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var vue_recaptcha__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-recaptcha */ "./node_modules/vue-recaptcha/dist/vue-recaptcha.es.js");
 //
 //
 //
@@ -3718,7 +3749,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    VueRecaptcha: vue_recaptcha__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       user: {
@@ -3726,31 +3767,52 @@ __webpack_require__.r(__webpack_exports__);
         last_name: '',
         address: '',
         email: '',
-        password: ''
+        password: '',
+        captchaToken: ''
       },
+      app_key: process.env.MIX_RECAPTCHA_KEY,
       confirmPassword: '',
       errors: {},
       confirmError: ''
     };
   },
   methods: {
+    onVerify: function onVerify(response) {
+      this.user.captchaToken = response;
+    },
     register: function register() {
       var _this = this;
+
+      axios.post('http://localhost:8000/api/validate', this.user).then(function (_ref) {
+        var data = _ref.data;
+
+        if (data.success) {
+          _this.signup();
+        } else {
+          alert('Please complete the ReCaptcha to verify that you are human');
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    signup: function signup() {
+      var _this2 = this;
 
       if (this.user.password !== this.confirmPassword) {
         this.confirmError = 'The password do not matched';
       } else {
         this.confirmError = '';
         this.$store.dispatch('REGISTER', this.user).then(function () {
-          _this.$router.push('/login');
+          _this2.$router.push('/login');
         })["catch"](function (error) {
-          console.log(error);
-          _this.errors = error.errors;
+          console.log(error.response);
+          _this2.errors = error.errors;
         });
       }
     }
   }
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -10580,7 +10642,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nnav[data-v-bd00d8e8] {\n    border-bottom: 1px white solid;\n}\n#b[data-v-bd00d8e8] {\n    margin-top: 20px;\n}\n#brand-name[data-v-bd00d8e8] {\n    color: red;\n    font-weight: 900;\n    font-size: 1.5em;\n    font-family: 'batmfa';\n    cursor: pointer;\n}\n.navbar-nav .nav-item .nav-link[data-v-bd00d8e8] {\n    color: #aaaaaa;\n    text-transform: uppercase;\n    font-size: .8em;\n}\n.navbar-nav .nav-item .nav-link[data-v-bd00d8e8]:hover {\n    background: #ffffff;\n    color: #000000;\n}\n\n", ""]);
+exports.push([module.i, "\nnav[data-v-bd00d8e8] {\n    border-bottom: 1px white solid;\n}\n#b[data-v-bd00d8e8] {\n    margin-top: 20px;\n}\n#brand-name[data-v-bd00d8e8] {\n    color: red;\n    font-weight: 900;\n    font-size: 1.5em;\n    font-family: 'batmfa';\n    cursor: pointer;\n}\n.navbar-nav .nav-item .nav-link[data-v-bd00d8e8] {\n    color: #aaaaaa;\n    text-transform: uppercase;\n    font-size: .8em;\n}\n.navbar-nav .nav-item .nav-link[data-v-bd00d8e8]:hover {\n    background: #ffffff;\n    color: #000000;\n}\n#share-facebook[data-v-bd00d8e8] {\n    background: transparent;\n}\n\n", ""]);
 
 // exports
 
@@ -10618,7 +10680,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nimg[data-v-b3c5cf30] {\n    width: 100%;\n}\n#label[data-v-b3c5cf30] {\n    color: white;\n}\n.product-name[data-v-b3c5cf30] {\n    font-family: 'batmfa';\n    font-weight: 600;\n}\n.product-card[data-v-b3c5cf30] {\n    width: 100%;\n}\n#page-title[data-v-b3c5cf30] {\n    font-family: 'batmfa';\n    color: #fff;\n}\n.form-control[data-v-b3c5cf30] {\n    background: grey;\n    color: white;\n}\n.product-image[data-v-b3c5cf30] {\n    width: 100%;\n}\n\n", ""]);
+exports.push([module.i, "\nimg[data-v-b3c5cf30] {\n    width: 100%;\n}\n#label[data-v-b3c5cf30] {\n    color: white;\n}\n.product-name[data-v-b3c5cf30] {\n    font-family: 'batmfa';\n    font-weight: 600;\n}\n.product-card[data-v-b3c5cf30] {\n    width: 100%;\n}\n#page-title[data-v-b3c5cf30] {\n    font-family: 'batmfa';\n    color: #fff;\n}\n.form-control[data-v-b3c5cf30] {\n    background: grey;\n    color: white;\n}\n.product-image[data-v-b3c5cf30] {\n    width: 100%;\n}\n#search-bar[data-v-b3c5cf30] {\n    background: #aaaaaa;\n    padding-top: 5px;\n    padding-bottom: 5px;\n    padding-left: 15px;\n    color: black;\n    width: 85%;\n    margin-right: 13px;\n    caret-color: black;\n    border-radius: 20px;\n}\n#search-bar[data-v-b3c5cf30]:focus {\n    outline: none;\n}\n\n", ""]);
 
 // exports
 
@@ -10675,7 +10737,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#text-box[data-v-6ea885e4] {\r\n    background: #a0a0a0a0;\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n    padding-left: 15px;\r\n    color: white;\r\n    width: 85%;\r\n    margin-right: 13px;\r\n    caret-color: white;\r\n    border-radius: 20px;\n}\n#text-box[data-v-6ea885e4]:focus {\r\n    outline: none;\n}\n#chat-box[data-v-6ea885e4] {\r\n    height: 100%;\r\n    width: 100%;\r\n    max-height: 100vh;\r\n    overflow: scroll;\n}\n.sender[data-v-6ea885e4] {\r\n    max-width: 60%;\r\n    overflow-wrap: break-word;\n}\n.receiver[data-v-6ea885e4] {\r\n    max-width: 60%;\r\n    overflow-wrap: break-word;\n}\r\n\r\n", ""]);
+exports.push([module.i, "\n#text-box[data-v-6ea885e4] {\r\n    background: #a0a0a0a0;\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n    padding-left: 15px;\r\n    color: white;\r\n    width: 85%;\r\n    margin-right: 13px;\r\n    caret-color: white;\r\n    border-radius: 20px;\n}\n#text-box[data-v-6ea885e4]:focus {\r\n    outline: none;\n}\n#chat-box[data-v-6ea885e4] {\r\n    height: 80%;\r\n    width: 100%;\r\n    max-height: 80vh;\r\n    overflow: scroll;\n}\n.sender[data-v-6ea885e4] {\r\n    max-width: 60%;\r\n    overflow-wrap: break-word;\n}\n.receiver[data-v-6ea885e4] {\r\n    max-width: 60%;\r\n    overflow-wrap: break-word;\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -10752,7 +10814,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n@font-face {\r\n    font-family: 'batmfa';\r\n    src: url(" + escape(__webpack_require__(/*! ../fonts/batmfa.ttf */ "./resources/js/fonts/batmfa.ttf")) + ");\n}\nv-form[data-v-364a2fac] {\r\n    color: white;\n}\n#page-title[data-v-364a2fac] {\r\n    font-family: 'batmfa';\r\n    color: #ffffff;\r\n    font-weight: 600;\r\n    font-size: 1.8em;\r\n    letter-spacing: 10px;\n}\n.errors[data-v-364a2fac] {\r\n    color: #f0e130;\n}\r\n\r\n", ""]);
+exports.push([module.i, "\n@font-face {\r\n    font-family: 'batmfa';\r\n    src: url(" + escape(__webpack_require__(/*! ../fonts/batmfa.ttf */ "./resources/js/fonts/batmfa.ttf")) + ");\n}\nv-form[data-v-364a2fac] {\r\n    color: white;\n}\n#captcha[data-v-364a2fac] {\r\n    height: 100%;\r\n    width: 100%;\n}\n#page-title[data-v-364a2fac] {\r\n    font-family: 'batmfa';\r\n    color: #ffffff;\r\n    font-weight: 600;\r\n    font-size: 1.8em;\r\n    letter-spacing: 10px;\n}\n.errors[data-v-364a2fac] {\r\n    color: #f0e130;\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -52443,8 +52505,33 @@ var render = function() {
                     fn: function() {
                       return [
                         _c(
+                          "v-btn",
+                          {
+                            attrs: { block: "", icon: "", id: "share-facebook" }
+                          },
+                          [
+                            _c("iframe", {
+                              staticStyle: {
+                                border: "none",
+                                overflow: "hidden"
+                              },
+                              attrs: {
+                                src:
+                                  "https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Flocalhost%3A8000%2F&layout=button&size=large&appId=463329024531110&width=73&height=28",
+                                width: "100",
+                                height: "50",
+                                scrolling: "no",
+                                frameborder: "0",
+                                allowTransparency: "true",
+                                allow: "encrypted-media"
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
                           "div",
-                          { staticClass: "pa-2" },
+                          { staticClass: "pa-2 mt-2" },
                           [
                             _c(
                               "v-btn",
@@ -53013,7 +53100,59 @@ var render = function() {
       _vm._v(" "),
       _c("v-divider"),
       _vm._v(" "),
-      _vm.isAuth && _vm.isAdmin ? _c("AddProduct") : _vm._e(),
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            [_vm.isAuth && _vm.isAdmin ? _c("AddProduct") : _vm._e()],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.search,
+                expression: "search"
+              }
+            ],
+            attrs: {
+              type: "text",
+              id: "search-bar",
+              placeholder: "Search Product"
+            },
+            domProps: { value: _vm.search },
+            on: {
+              keyup: _vm.searchProduct,
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.search = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "v-btn",
+            {
+              attrs: { icon: "", small: "", dark: "" },
+              on: { click: _vm.searchProduct }
+            },
+            [_c("v-icon", [_vm._v("search")])],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
       _vm._l(_vm.products, function(product) {
         return _c(
@@ -53478,7 +53617,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-footer",
-        { staticClass: "py-2", attrs: { dark: "", fixed: "" } },
+        { staticClass: "py-2 mt-3", attrs: { dark: "", fixed: "" } },
         [
           _c("input", {
             directives: [
@@ -54249,7 +54388,7 @@ var render = function() {
               _vm._v(" "),
               _vm.errors.first_name
                 ? _c("span", { staticClass: "errors" }, [
-                    _vm._v(" " + _vm._s(_vm.errors.first_name[0]) + " ")
+                    _vm._v(" " + _vm._s(_vm.errors.first_name) + " ")
                   ])
                 : _vm._e(),
               _vm._v(" "),
@@ -54375,6 +54514,30 @@ var render = function() {
                 : _vm._e(),
               _vm._v(" "),
               _c("br"),
+              _vm._v(" "),
+              _c(
+                "v-row",
+                { staticClass: "mb-3" },
+                [
+                  _c(
+                    "v-col",
+                    { attrs: { sm: "12" } },
+                    [
+                      _c("vue-recaptcha", {
+                        ref: "captcha",
+                        attrs: {
+                          size: "small",
+                          theme: "dark",
+                          sitekey: "6Ld1ncAUAAAAAA6plTp_wHDP5bwIqehfUJZUBTjh"
+                        },
+                        on: { verify: _vm.onVerify }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "v-btn",
@@ -55069,6 +55232,212 @@ function normalizeComponent (
     options: options
   }
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-recaptcha/dist/vue-recaptcha.es.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/vue-recaptcha/dist/vue-recaptcha.es.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+var defer = function defer() {
+  var state = false; // Resolved or not
+
+  var callbacks = [];
+
+  var resolve = function resolve(val) {
+    if (state) {
+      return;
+    }
+
+    state = true;
+
+    for (var i = 0, len = callbacks.length; i < len; i++) {
+      callbacks[i](val);
+    }
+  };
+
+  var then = function then(cb) {
+    if (!state) {
+      callbacks.push(cb);
+      return;
+    }
+
+    cb();
+  };
+
+  var deferred = {
+    resolved: function resolved() {
+      return state;
+    },
+    resolve: resolve,
+    promise: {
+      then: then
+    }
+  };
+  return deferred;
+};
+
+function createRecaptcha() {
+  var deferred = defer();
+  return {
+    notify: function notify() {
+      deferred.resolve();
+    },
+    wait: function wait() {
+      return deferred.promise;
+    },
+    render: function render(ele, options, cb) {
+      this.wait().then(function () {
+        cb(window.grecaptcha.render(ele, options));
+      });
+    },
+    reset: function reset(widgetId) {
+      if (typeof widgetId === 'undefined') {
+        return;
+      }
+
+      this.assertLoaded();
+      this.wait().then(function () {
+        return window.grecaptcha.reset(widgetId);
+      });
+    },
+    execute: function execute(widgetId) {
+      if (typeof widgetId === 'undefined') {
+        return;
+      }
+
+      this.assertLoaded();
+      this.wait().then(function () {
+        return window.grecaptcha.execute(widgetId);
+      });
+    },
+    checkRecaptchaLoad: function checkRecaptchaLoad() {
+      if (window.hasOwnProperty('grecaptcha') && window.grecaptcha.hasOwnProperty('render')) {
+        this.notify();
+      }
+    },
+    assertLoaded: function assertLoaded() {
+      if (!deferred.resolved()) {
+        throw new Error('ReCAPTCHA has not been loaded');
+      }
+    }
+  };
+}
+var recaptcha = createRecaptcha();
+
+if (typeof window !== 'undefined') {
+  window.vueRecaptchaApiLoaded = recaptcha.notify;
+}
+
+var VueRecaptcha = {
+  name: 'VueRecaptcha',
+  props: {
+    sitekey: {
+      type: String,
+      required: true
+    },
+    theme: {
+      type: String
+    },
+    badge: {
+      type: String
+    },
+    type: {
+      type: String
+    },
+    size: {
+      type: String
+    },
+    tabindex: {
+      type: String
+    },
+    loadRecaptchaScript: {
+      type: Boolean,
+      "default": false
+    },
+    recaptchaScriptId: {
+      type: String,
+      "default": '__RECAPTCHA_SCRIPT'
+    },
+    recaptchaHost: {
+      type: String,
+      "default": 'www.google.com'
+    }
+  },
+  beforeMount: function beforeMount() {
+    if (this.loadRecaptchaScript) {
+      if (!document.getElementById(this.recaptchaScriptId)) {
+        // Note: vueRecaptchaApiLoaded load callback name is per the latest documentation
+        var script = document.createElement('script');
+        script.id = this.recaptchaScriptId;
+        script.src = "https://" + this.recaptchaHost + "/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    recaptcha.checkRecaptchaLoad();
+
+    var opts = _extends({}, this.$props, {
+      callback: this.emitVerify,
+      'expired-callback': this.emitExpired
+    });
+
+    var container = this.$slots["default"] ? this.$el.children[0] : this.$el;
+    recaptcha.render(container, opts, function (id) {
+      _this.$widgetId = id;
+
+      _this.$emit('render', id);
+    });
+  },
+  methods: {
+    reset: function reset() {
+      recaptcha.reset(this.$widgetId);
+    },
+    execute: function execute() {
+      recaptcha.execute(this.$widgetId);
+    },
+    emitVerify: function emitVerify(response) {
+      this.$emit('verify', response);
+    },
+    emitExpired: function emitExpired() {
+      this.$emit('expired');
+    }
+  },
+  render: function render(h) {
+    return h('div', {}, this.$slots["default"]);
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (VueRecaptcha);
 
 
 /***/ }),
@@ -109035,7 +109404,8 @@ var api = {
   message: apiDomain + 'api/messages',
   specs: apiDomain + 'api/specs',
   messageAdmin: apiDomain + 'api/message_admin',
-  messageUser: apiDomain + 'api/message_user'
+  messageUser: apiDomain + 'api/message_user',
+  productSearch: apiDomain + 'api/product_search'
 };
 
 /***/ }),
@@ -110942,7 +111312,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
           resolve(true);
         })["catch"](function (error) {
           commit('SET_LOADER', false);
-          reject(error.response.data);
+          console.log(error.response);
         });
       });
     },

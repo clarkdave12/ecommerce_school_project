@@ -164,7 +164,11 @@
 
             <!-- LOGOUT -->
             <template v-slot:append v-if="isAuth">
-                <div class="pa-2">
+                <v-btn block icon id="share-facebook">
+                    <iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Flocalhost%3A8000%2F&layout=button&size=large&appId=463329024531110&width=73&height=28" width="100" height="50" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+                
+                </v-btn>
+                <div class="pa-2 mt-2">
                     <v-btn block @click="logout()">Logout</v-btn>
                 </div>
             </template>
@@ -270,6 +274,10 @@ export default {
     .navbar-nav .nav-item .nav-link:hover {
         background: #ffffff;
         color: #000000;
+    }
+
+    #share-facebook {
+        background: transparent;
     }
 
 </style>

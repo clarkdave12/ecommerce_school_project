@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use GuzzleHttp\Client;
 
 class AppController extends Controller
 {
@@ -11,14 +12,28 @@ class AppController extends Controller
         return view('welcome');
     }
 
-    public function register(Request $request) {
+    public function validateCaptcha(Request $request)
+    {
+        $client = new Client();
+        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret' => env('RECAPTCHA_SECRET'),
+                'response' => $request->captchaToken
+            ]
+        ]);
+
+        return $response->getBody();
+    }
+
+    public function register(Request $request)
+    {
 
         $this->validate($request, [
             'first_name' => 'required|max:30',
             'last_name' => 'required|max:30',
             'address' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'password' => 'required|min:8'
         ]);
 
         $user = User::create([

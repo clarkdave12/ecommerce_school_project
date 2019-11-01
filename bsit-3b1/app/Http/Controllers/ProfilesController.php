@@ -17,25 +17,9 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-        return User::find(2);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         /* Decode the image String */
@@ -88,50 +72,15 @@ class ProfilesController extends Controller
                     ->select('users.first_name',
                              'users.last_name',
                              'users.email',
-                             'users.address',
-                             'profiles.age',
-                             'profiles.gender',
-                             'profiles.work',
-                             'profiles.user_id',
-                             'profiles.image',
-                             'profiles.religion')
+                             'users.address',)
                     ->where('users.id', $id)
                     ->get();
 
         return response()->json(['profile' => $data], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return User::find($id);
     }
 }

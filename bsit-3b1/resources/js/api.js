@@ -17,4 +17,5 @@ export const api = {
     specs: apiDomain + 'api/specs',
     messageAdmin: apiDomain + 'api/message_admin',
     messageUser: apiDomain + 'api/message_user',
+    productSearch: apiDomain + 'api/product_search',
 }
