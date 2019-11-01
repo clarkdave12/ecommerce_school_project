@@ -21,20 +21,11 @@ export default {
     },
 
     created () {
-        /* axios.interceptors.request.use(config => {
-            
-            this.$store.commit('SET_LOADER', true)
-            return config
-        }, error => {
-            return Promise.reject(error)
-        });
+        var channel = Echo.channel('my-channel');
+                    channel.listen('.TestEvent', (data) => {
+                    alert(JSON.stringify(data));
+                    });
 
-        axios.interceptors.response.use(response => {
-            this.$store.commit('SET_LOADER', false)
-            return response
-        }, error => {
-            return Promise.reject(error)
-        }) */
     },
 }
 </script>

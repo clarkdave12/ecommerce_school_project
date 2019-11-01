@@ -3,11 +3,11 @@
         <v-row>
             <v-col sm="4">
                 <v-card>
-                    <img id="product-image" src="http://localhost:8000/images/monitor.jpeg" alt="asd">
+                    <img id="product-image" :src="'http://localhost:8000/' + product.image" :alt="product.name">
                 </v-card>
             </v-col>
             <v-col sm="8">
-                <h3 id="product-title"> Motherboard Name </h3>
+                <h3 id="product-title"> {{ product.name }} </h3>
             </v-col>
         </v-row>
 
@@ -68,15 +68,18 @@ export default {
 
     created () {
         
-        if(this.user.role == 'User') {
-            this.isAdmin = false
-        }
-        else if(this.user.role == 'Admin') {
-            this.isAdmin = true
-        }
-        else {
-            this.isAdmin = false
-        }
+        this.$store.dispatch('USER_DATA')
+            .then(() => {
+                if(this.user.role == 'User') {
+                    this.isAdmin = false
+                }
+                else if(this.user.role == 'Admin') {
+                    this.isAdmin = true
+                }
+                else {
+                    this.isAdmin = false
+                }
+            })
 
         this.$store.dispatch('GET_SPECS', this.$route.params.product_id)
             .then(() => {
@@ -94,9 +97,9 @@ export default {
         addSpecification() {
             
             const data = {
+                label: this.label,
                 specs: this.spec,
                 product_id: this.$route.params.product_id,
-                label: this.label,
             }
 
             axios.post(api.specs, data)

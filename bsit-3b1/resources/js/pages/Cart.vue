@@ -5,7 +5,7 @@
 
         <v-expansion-panels dark>
             <v-expansion-panel v-for="cart in carts" :key="cart.id">
-                <v-expansion-panel-header>
+                <v-expansion-panel-header class="product-name">
                     {{ cart.name }}
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
@@ -88,4 +88,9 @@ export default {
         width: 100%;
         height: 70%;
     }
+
+    .product-name {
+        text-transform: uppercase;
+    }
+
 </style>

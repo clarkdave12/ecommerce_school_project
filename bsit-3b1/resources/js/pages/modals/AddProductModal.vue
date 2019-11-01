@@ -79,6 +79,7 @@ export default {
 
                     bus.$emit('product-changed')
                     window.alert('Product Added')
+                    
                 })
                 .catch(error => {
                     console.log(error.response)

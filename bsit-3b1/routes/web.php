@@ -11,4 +11,6 @@
 |
 */
 
+use App\Events\TestEvent;
+
 Route::get('/{any}', 'AppController@index')->where('any', '.*');

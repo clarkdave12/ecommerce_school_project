@@ -18,7 +18,8 @@ import Profile from './pages/Profile.vue';
 import ProfileCreate from './pages/ProfileCreate.vue';
 import UserFeedback from './pages/UserFeedback.vue';
 import Message from './pages/Message.vue';
-import Lexin from './lexin/Lexin.vue';
+import Builder from './builder/Builder.vue';
+import Contact from './pages/Contact.vue';
 
 export const routes = [
     /* For Admin */
@@ -106,12 +107,16 @@ export const routes = [
         meta: { forUser: true }
     },
     {
-        path: '/messages/:user_id',
+        path: '/messages',
         component: Message,
+    },
+    {
+        path: '/builder',
+        component: Builder, 
         meta: { forUser: true }
     },
     {
-        path: '/lexin',
-        component: Lexin
+        path: '/contact',
+        component: Contact,    
     }
 ]

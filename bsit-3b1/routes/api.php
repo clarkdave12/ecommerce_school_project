@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+use App\Events\TestEvent;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -30,10 +31,12 @@ Route::resource('/carts', 'CartsController');
 Route::resource('/profile', 'ProfilesController');
 Route::get('/user-feedback/{user_id}', 'FeedbackController@getUserFeedback');
 Route::post('/update-profile/{user_id}', 'ProfilesController@updateProfile');
-Route::resource('/messages', 'MessagesController');
 Route::get('/reply/{id}/{message}', 'MessagesController@getReply');
 Route::post('/saveReply', 'MessagesController@saveReply');
 Route::get('/get_products_by_category/{category}', 'LexinController@productByCategory');
 Route::get('/get_product_info/{id}', 'LexinController@productInfo');
 
 Route::resource('/specs', 'SpecsController');
+Route::resource('/messages', 'MessagesController');
+Route::get('/message_admin', 'MessagesController@messageAdmin');
+Route::get('/message_user', 'MessagesController@messageUSer');

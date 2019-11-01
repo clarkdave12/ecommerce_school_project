@@ -34,7 +34,7 @@ export default {
         logins() {
             var data = {
                 client_id: 2,
-                client_secret: 'gGqpMfwbKE7qW3nUuheNxku9Nr0FgAhlSW1dhukD',
+                client_secret: 'OxlKGj3HEBMExZrqv3qrouwVpF9kqwbWnt7EGEz2',
                 grant_type: 'password',
                 username: this.user.email,
                 password: this.user.password
@@ -66,57 +66,6 @@ export default {
                     console.log(error)
                 })
         },
-
-        /* login() {
-
-            var data = {
-                client_id: 2,
-                client_secret: 'gGqpMfwbKE7qW3nUuheNxku9Nr0FgAhlSW1dhukD',
-                grant_type: 'password',
-                username: this.user.email,
-                password: this.user.password
-            }
-
-            axios.post(loginURL, data)
-                .then(response => {
-                   
-                   const access_token = response.data.access_token;
-                   const expires_in = response.data.expires_in;
-                   const d = new Date();
-                   d.setTime(d.getTime() + (200 * 24 * 60 * 60 * 1000));
-                   const expires = d.toUTCString();
-
-                   document.cookie = 'access_token=' + access_token + ';' + 'expires=' + expires + ';path=/';
-                   
-                   axios.get(userURL, {headers: getHeader()})
-                        .then(response => {
-                            axios.get(userRoleURL + '/' + response.data.id)
-                                    .then(response => {
-                                        if(response.data == 'Admin') {
-                                            this.$router.replace('/admin')
-                                        }
-                                        else if(response.data == 'User') {
-                                            this.$router.replace('/products')
-                                        }
-                                        bus.$emit('login')
-                                    })
-                                    .catch(error => {
-                                        console.log(error)
-                                    })
-                        })
-                        .catch(error => {
-                            console.log(response)              
-                        })
-                   
-                })
-                .catch(error => {
-                    this.errorMessage = 'The Email or Password is incorrect'
-                })
-        }, */
-
-        getUserRole (id) {
-            
-        }
     }
     
 }

@@ -1,56 +1,67 @@
 <template>
-    <v-container fluid>
-        <!-- For User -->
-        <div v-if="!isAdmin">
-            <v-card dark>
-                <v-card-actions class="mx-2 py-2">
-                    <v-avatar size="40" class="mr-3">
-                        <img src="http://localhost:8000/images/monitor.jpeg" alt="">
-                    </v-avatar>
-                    <p>Chat Bot</p>
-                </v-card-actions>
-            </v-card> 
-            <v-card dark id="box" class="px-3 py-2">
-                <div v-for="message in messages" :key="message.id">
-                    <v-card-actions v-if="message.sender_id == user.id">
-                        <v-spacer></v-spacer>
-                        <v-card color="primary" max-width="180">
-                            <v-card-text class="sender-text white--text"> {{ message.message }} </v-card-text>
-                        </v-card>
-                        <v-avatar size="20" class="ml-3">
-                            <img src="http://localhost:8000/images/monitor.jpeg" alt="">
-                        </v-avatar>
-                    </v-card-actions>
+    <v-container>
+        <v-sheet dark id="chat-box" class="px-3 py-5" v-chat-scroll>
+            <div class="bubble-container" v-for="message in messages" :key="message.id">
+                <v-card class="sender mb-5" v-if="message.receiver == user.id">
+                    <v-card-text>
+                        {{ message.message }}
+                    </v-card-text>
+                </v-card>   
+                <v-card class="receiver ml-auto mb-5 primary" v-if="message.sender == user.id">
+                    <v-card-text>
+                        {{ message.message }}
+                    </v-card-text>
+                </v-card>
+            </div>
+        </v-sheet>
 
-                    <v-card-actions v-if="message.receiver_id == user.id">
-                        <v-avatar size="20" class="mr-3">
-                            <img src="http://localhost:8000/images/monitor.jpeg" alt="">
-                        </v-avatar>
-                        <v-card color="grey lighten-3" max-width="180">
-                            <v-card-text class="sender-text black--text"> {{ message.message }} </v-card-text>
-                        </v-card>
-                        <v-spacer></v-spacer>
-                    </v-card-actions>
-                </div>
-            </v-card>
-        </div>
-
-        <!-- Sending Message -->
-        <v-footer fixed dark height="70">
-            <v-text-field dark outlined label="Message" v-model="message"></v-text-field>
-            <v-spacer></v-spacer>
-            <v-btn small class="mb-8" color="primary" @click="sendMessage()">send</v-btn>
+        <v-footer dark fixed class="py-2">
+                <input v-model="messageData.message" type="text" id="text-box" placeholder="Your message...">
+                <v-btn icon @click="send">
+                    <v-icon>send</v-icon>
+                </v-btn>
         </v-footer>
     </v-container>
 </template>
 
 <script>
 export default {
-    
+
     data () {
         return {
-            isAdmin: false,
-            message: ''
+            messageData: {
+                message: '',
+                sender: '',
+                receiver: ''
+            }
+        }
+    },
+    
+    created () {
+
+        if(localStorage.getItem('token'))
+        {
+            this.$store.dispatch('USER_DATA')
+                .then(() => {
+                    
+                    this.messageData.sender = this.user.id
+
+                    this.$store.dispatch('GET_MESSAGES', this.user.id)
+
+                    const channel = Echo.channel('message')
+                        channel.listen('.MessageSent', () => {
+                            this.$store.dispatch('GET_MESSAGES', this.user.id)
+                        })
+                })
+        }
+
+        if(this.$store.state.receiver == '')
+        {
+            this.$router.push('/contact')
+        }
+        else
+        {
+            this.messageData.receiver = this.$store.state.receiver
         }
     },
 
@@ -64,44 +75,22 @@ export default {
         }
     },
 
-    created() {
-        this.$store.dispatch('USER_DATA')
-            .then(() => {
-                if(this.user.role == 'Admin') {
-                    this.isAdmin = true
-                }
-                else if(this.user.role == 'User') {
-                    this.isAdmin = false
-                }
-            })
-
-        this.$store.dispatch('GET_MESSAGES', this.$route.params.user_id)
-    },
-
     methods: {
-        sendMessage() {
+        
+        send () {
             
             const data = {
-                sender_id: this.$route.params.user_id,
-                receiver_id: 1,
-                message: this.message
+                message: this.messageData.message,
+                sender: this.user.id,
+                receiver: this.messageData.receiver
             }
 
-            this.$store.dispatch('SEND_MESSAGE', data)
-                .then(() => {
-                      this.$store.dispatch('GET_MESSAGES', this.$route.params.user_id)
-
-                      const replyPayload = {
-                          receiver_id: data.sender_id,
-                          message: data.message
-                      }
-                      this.$store.dispatch('GET_REPLY', replyPayload)
-                            .then(() => {
-                                this.$store.dispatch('GET_MESSAGES', this.$route.params.user_id)
-                            })
-                            .catch(error => {
-                                console.log(error)
-                            })
+            axios.post('http://localhost:8000/api/messages', data)
+                .then(response => {
+                    this.messageData.message = ''
+                })
+                .catch(error => {
+                    console.log(error.response)
                 })
         }
     }
@@ -109,12 +98,38 @@ export default {
 </script>
 
 <style scoped>
-    #box {
-        height: 430px;
-        width: 100%;
-        max-height: 450px;
-        max-width: 100%;
-        overflow: scroll;
-    }
+
+#text-box {
+    background: #a0a0a0a0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    color: white;
+    width: 85%;
+    margin-right: 13px;
+    caret-color: white;
+    border-radius: 20px;
+}
+
+#text-box:focus {
+    outline: none;
+}
+
+#chat-box {
+    height: 100%;
+    width: 100%;
+    max-height: 100vh;
+    overflow: scroll;
+}
+
+.sender {
+    max-width: 60%;
+    overflow-wrap: break-word;
+}
+
+.receiver {
+    max-width: 60%;
+    overflow-wrap: break-word;
+}
 
 </style>

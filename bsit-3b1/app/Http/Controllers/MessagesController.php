@@ -2,55 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Message;
+use Illuminate\Http\Request;
 use DB;
+use App\Events\MessageSent;
+use App\User;
+use App\Role;
 
 class MessagesController extends Controller
 {
-    public function index() {
+    public function index() 
+    {
+        $m = 'asdasd';
 
+        event(new TestEvent($m));
     }
 
-    public function show($id) {
-
-        $message = Message::orderBy('created_at', 'asc')
-                            ->where('sender_id', $id)
-                            ->orWhere('receiver_id', $id)
-                            ->get();
-
-        return response()->json(['messages' => $message], 200);
+    public function show($id)
+    {
+        return Message::where('sender', $id)->orWhere('receiver', $id)->get();
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
+        $m = new Message();
+        $m->message = $request->message;
+        $m->sender = $request->sender;
+        $m->receiver = $request->receiver;
+        $m->save();
 
-        $message = new Message();
-
-        $message->sender_id = $request->sender_id;
-        $message->receiver_id = $request->receiver_id;
-        $message->message = $request->message;
-        $message->save();
-        
-        return response()->json(['message' => 'Message Sent'], 200);
+        event(new MessageSent());
     }
 
-    public function getReply($id, $message) {
+    public function messageAdmin()
+    {
+        $admins = DB::table('users')
+                    ->join('roles', 'users.id', '=', 'roles.user_id')
+                    ->select('users.id', 'users.first_name', 'users.last_name')
+                    ->where('roles.name', 'Admin')
+                    ->get();
 
-        
-
-        return $reply;
+        return $admins;
     }
 
-    public function saveReply(Request $request) {
+    public function messageUser()
+    {
+        $users = DB::table('users')
+                    ->join('roles', 'users.id', '=', 'roles.user_id')
+                    ->select('users.id', 'users.first_name', 'users.last_name')
+                    ->where('roles.name', 'User')
+                    ->get();
 
-        $message = new Message();
-        
-        $message->sender_id = 1;
-        $message->receiver_id = $request->receiver_id;
-        $message->message = $request->message;
-
-        $message->save();
-
-        return response()->json(['Success' => 'Message saved'], 200);
+        return $users;
     }
 }

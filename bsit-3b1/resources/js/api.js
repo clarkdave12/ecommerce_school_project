@@ -14,7 +14,7 @@ export const api = {
     userFeedback: apiDomain + 'api/user-feedback',
     updateProfile: apiDomain + 'api/update-profile',
     message: apiDomain + 'api/messages',
-    replyMessage: apiDomain + 'api/reply',
-    saveReply: apiDomain + 'api/saveReply',
-    specs: apiDomain + 'api/specs'
+    specs: apiDomain + 'api/specs',
+    messageAdmin: apiDomain + 'api/message_admin',
+    messageUser: apiDomain + 'api/message_user',
 }

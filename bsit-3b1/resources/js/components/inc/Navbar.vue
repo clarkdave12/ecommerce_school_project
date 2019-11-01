@@ -85,7 +85,7 @@
             </v-list-item>
 
             <!-- MESSAGING -->
-            <v-list-item link :to="'/messages/' + user_id" v-if="isAuth && !isAdmin">
+            <v-list-item link to="/contact" v-if="isAuth">
                 <v-list-item-icon>
                     <v-icon>chat</v-icon>
                 </v-list-item-icon>
@@ -98,7 +98,7 @@
             </v-list-item>
 
             <!-- LEXIN -->
-            <v-list-item link to="/lexin" v-if="isAuth && !isAdmin">
+            <!-- <v-list-item link to="/lexin" v-if="isAuth && !isAdmin">
                 <v-list-item-icon>
                     <v-icon>android</v-icon>
                 </v-list-item-icon>
@@ -106,6 +106,19 @@
                 <v-list-item-content>
                     <v-list-item-title>
                         LEXIN
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item> -->
+
+            <!-- BUILDER -->
+            <v-list-item link to="/builder" v-if="isAuth && !isAdmin">
+                <v-list-item-icon>
+                    <v-icon>build</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Builder
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>

@@ -20,6 +20,10 @@ export const store = new Vuex.Store({
         categories: [],
         messages: [],
         specs: [],
+        admins: [],
+        users: [],
+
+        receiver: '',
         loader: false
     },
     mutations: {
@@ -73,6 +77,18 @@ export const store = new Vuex.Store({
 
         SET_SPECS: (state, data) => {
             state.specs = data
+        },
+
+        SET_ADMINS: (state, data) => {
+            state.admins = data
+        },
+
+        SET_USERS: (state, data) => {
+            state.users = data
+        },
+
+        SET_RECEIVER: (state, data) => {
+            state.receiver = data
         }
     },
     actions: {
@@ -289,8 +305,8 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.get(api.message + '/' + payload)
                     .then(({data}) => {
-                        commit('SET_MESSAGES', data.messages)
-                        resolve(true)
+                        commit('SET_MESSAGES', data)
+                        console.log(data)
                     })
                     .catch(error => {
                         reject(error)
@@ -298,54 +314,44 @@ export const store = new Vuex.Store({
             })
         },
 
-        SEND_MESSAGE: ({commit}, payload) => {
+        GET_ADMINS: ({commit}) => {
 
             return new Promise((resolve, reject) => {
-                axios.post(api.message, payload)
-                    .then(() => {
+                axios.get(api.messageAdmin)
+                    .then(({data}) => {
+                        commit('SET_ADMINS', data)
                         resolve(true)
                     })
                     .catch(error => {
-                        reject(error)
+                        reject(error.response)
                     })
             })
         },
 
-        GET_REPLY: ({commit}, payload) => {
+        GET_USERS: ({commit}) => {
 
             return new Promise((resolve, reject) => {
-                axios.get(api.replyMessage + '/' + payload.receiver_id + '/' + payload.message)
-                    .then(response => {
-                        const m = {
-                            message: response.data,
-                            receiver_id: payload.receiver_id
-                        }
-                        axios.post(api.saveReply, m)
-                            .then(() => {
-                                resolve(true)
-                            })
-                            .catch(error => {
-                                reject(error)
-                            })
+                axios.get(api.messageUser)
+                    .then(({data}) => {
+                        commit('SET_USERS', data)
+                        resolve(true)
                     })
                     .catch(error => {
-                        reject(error)
+                        reject(error.response)
                     })
             })
         },
 
         /* For the Admin */
         GET_CATEGORIES: ({commit})=> {
-            commit('SET_LOADER', true)
+            
             return new Promise((resolve, reject) => {
                 axios.get(api.categories)
                     .then(({data}) => {
                         commit('SET_CATEGORIES', data)
-                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
-                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })

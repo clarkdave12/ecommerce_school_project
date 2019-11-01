@@ -8,7 +8,9 @@ import {routes} from './routes';
 import {store} from './store/store'
 import {api} from './api'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import VueChatScroll from 'vue-chat-scroll'
 
+Vue.use(VueChatScroll)
 Vue.use(VueRouter);
 Vue.use(Vuetify);
 
