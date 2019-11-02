@@ -164,10 +164,11 @@
 
             <!-- LOGOUT -->
             <template v-slot:append v-if="isAuth">
-                <v-btn block icon id="share-facebook">
-                    <iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Flocalhost%3A8000%2F&layout=button&size=large&appId=463329024531110&width=73&height=28" width="100" height="50" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                 
+                <v-btn block icon >
+                    <iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Flocalhost%3A8000&layout=button&size=large&appId=463329024531110&width=73&height=28" width="73" height="28" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
                 </v-btn>
+
                 <div class="pa-2 mt-2">
                     <v-btn block @click="logout()">Logout</v-btn>
                 </div>
@@ -178,6 +179,7 @@
 
 
 <script>
+
 export default {
     data () {
         return {
@@ -248,6 +250,13 @@ export default {
 </script>
 
 <style scoped>
+    iframe {
+        margin-left: 60px;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
     nav {
         border-bottom: 1px white solid;
     }

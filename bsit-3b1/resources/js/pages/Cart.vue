@@ -30,7 +30,12 @@
         <v-footer fixed dark>
             <div> <strong>Total Amount: </strong> <br> PHP {{ totalAmount }} </div>
             <v-spacer></v-spacer>
-            <v-btn class="success"> Checkout </v-btn>
+            <Paypal
+                :amount="totalAmount.toString()"
+                currency="PHP"
+                :client="credentials"
+                env="sandbox"
+            ></Paypal>
         </v-footer>
     </v-container>
 </template>
@@ -38,8 +43,21 @@
 
 <script>
 import { parse } from 'path';
+import Paypal from 'vue-paypal-checkout'
 
 export default {
+
+    components: {
+        Paypal,
+    },
+
+    data () {
+        return {
+            credentials: {
+                sandbox: 'AXhCKf6NrukEkdPzlGGUK3DdP5IdMVdBeRb5g2htSILtRwnLfOSqQnu4xu-vSqf_zIZOyAla5e-R5Bw4'
+            }
+        }
+    },
 
     computed: {
 

@@ -138,6 +138,7 @@ export default {
 
     methods: {
 
+
         searchProduct() {
 
             const data = {
