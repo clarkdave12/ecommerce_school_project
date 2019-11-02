@@ -103,4 +103,16 @@ class CartsController extends Controller
 
         return response()->json(['Deleted' => $cart], 200);
     }
+
+    public function clearCart($id)
+    {
+        $carts = Cart::where('user_id', $id)->get();
+
+        foreach($carts as $cart)
+        {
+            $cart->delete();
+        }
+
+        return response()->json(['Success' => 'Payment Successfull'], 200);
+    }
 }

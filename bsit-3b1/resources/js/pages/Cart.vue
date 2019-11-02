@@ -30,12 +30,14 @@
         <v-footer fixed dark>
             <div> <strong>Total Amount: </strong> <br> PHP {{ totalAmount }} </div>
             <v-spacer></v-spacer>
-            <Paypal
-                :amount="totalAmount.toString()"
-                currency="PHP"
-                :client="credentials"
-                env="sandbox"
-            ></Paypal>
+            <form :action="'http://localhost:8000/api/create-payment/' + user.id + '/' + totalAmount" method="post">
+                <v-btn type="submit" color="success">
+                    checkout
+                </v-btn>
+            </form>
+            <!-- <v-btn @click="checkout">
+                checkout
+            </v-btn> -->
         </v-footer>
     </v-container>
 </template>
@@ -43,21 +45,8 @@
 
 <script>
 import { parse } from 'path';
-import Paypal from 'vue-paypal-checkout'
 
 export default {
-
-    components: {
-        Paypal,
-    },
-
-    data () {
-        return {
-            credentials: {
-                sandbox: 'AXhCKf6NrukEkdPzlGGUK3DdP5IdMVdBeRb5g2htSILtRwnLfOSqQnu4xu-vSqf_zIZOyAla5e-R5Bw4'
-            }
-        }
-    },
 
     computed: {
 
@@ -73,10 +62,16 @@ export default {
             });
 
             return c
+        },
+
+        user() {
+            return this.$store.state.user
         }
     },
 
     created () {
+        this.$store.dispatch('USER_DATA')
+
         this.$store.dispatch('GET_CART', this.$store.state.user.id)
         bus.$on('itemRemoved', () => {
             this.$store.dispatch('GET_CART', this.$store.state.user.id)
@@ -84,6 +79,17 @@ export default {
     },
 
     methods: {
+
+        checkout() {
+            axios.post('http://localhost:8000/api/create-payment')
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+
         removeItem(id) {
             axios.delete(api.carts + '/' + id)
                 .then(() => {
@@ -109,6 +115,10 @@ export default {
 
     .product-name {
         text-transform: uppercase;
+    }
+
+    input {
+        display: none;
     }
 
 </style>

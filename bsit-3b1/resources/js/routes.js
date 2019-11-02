@@ -20,6 +20,7 @@ import UserFeedback from './pages/UserFeedback.vue';
 import Message from './pages/Message.vue';
 import Builder from './builder/Builder.vue';
 import Contact from './pages/Contact.vue';
+import Success from './pages/SuccessfulPayment.vue';
 
 export const routes = [
     /* For Admin */
@@ -118,5 +119,9 @@ export const routes = [
     {
         path: '/contact',
         component: Contact,    
+    },
+    {
+        path: '/success',
+        component: Success
     }
 ]
