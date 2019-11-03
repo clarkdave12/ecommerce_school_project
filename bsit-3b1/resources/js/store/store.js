@@ -22,6 +22,9 @@ export const store = new Vuex.Store({
         specs: [],
         admins: [],
         users: [],
+        purchasedHistory: [],
+        usersManage: [],
+        payments: [],
 
         receiver: '',
         loader: false
@@ -89,6 +92,18 @@ export const store = new Vuex.Store({
 
         SET_RECEIVER: (state, data) => {
             state.receiver = data
+        },
+
+        SET_PURCHASED_HISTORY: (state, data) => {
+            state.purchasedHistory = data
+        },
+
+        SET_USERS_MANAGE: (state, data) => {
+            state.usersManage = data
+        },
+
+        SET_PAYMENTS: (state, data) => {
+            state.payments = data
         }
     },
     actions: {
@@ -127,6 +142,7 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.get(api.user, { headers: header })
                     .then(({data}) => {
+
                         userInfo.email = data.email
                         userInfo.name = data.last_name + ', ' + data.first_name
                         userInfo.id = data.id
@@ -328,6 +344,20 @@ export const store = new Vuex.Store({
             })
         },
 
+        GET_USERS_MANAGE:({commit}) => {
+
+            return new Promise((resolve, reject) => {
+                axios.get(api.manageUsers)
+                    .then(({data}) => {
+                        commit('SET_USERS_MANAGE', data)
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+
         GET_USERS: ({commit}) => {
 
             return new Promise((resolve, reject) => {
@@ -338,6 +368,20 @@ export const store = new Vuex.Store({
                     })
                     .catch(error => {
                         reject(error.response)
+                    })
+            })
+        },
+
+        GET_PURCHASED_HISTORY: ({commit}, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.get(api.purchasedHistory + '/' + payload)
+                    .then(response => {
+                        commit('SET_PURCHASED_HISTORY', response.data)
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error)
                     })
             })
         },
@@ -458,6 +502,48 @@ export const store = new Vuex.Store({
                     })
                     .catch(({response}) => {
                         reject(response)
+                    })
+            })
+        },
+
+        REMOVE_COMMENT: (NULL, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.delete(api.feedbacks + '/' + payload)
+                    .then(response => {
+                        console.log(response)
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                        reject(error.response)
+                    })
+            })
+        },
+
+        REMOVE_USER: (NULL, payload) => {
+
+            return new Promise((resolve, reject) => {
+                axios.delete(api.removeUser + '/' + payload)
+                    .then(() => {
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error.response)
+                    })
+            })
+        },
+
+        GET_PAYMENTS: ({commit}) => {
+            
+            return new Promise((resolve, reject) => {
+                axios.get(api.payments)
+                    .then(({data}) => {
+                        commit('SET_PAYMENTS', data)
+                        resolve(true)
+                    })
+                    .catch(error => {
+                        reject(error.response)
                     })
             })
         }

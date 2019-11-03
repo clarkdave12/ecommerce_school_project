@@ -1,11 +1,11 @@
 <template>
-    <v-app id="bg">
+    <v-app id="bg" dark>
         <Navbar />
 
-        <v-container fluid>
+        <v-content>
             <router-view></router-view>
             <loader></loader>
-        </v-container>
+        </v-content>
     </v-app>
 </template>
 

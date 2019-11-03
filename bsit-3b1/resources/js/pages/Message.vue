@@ -90,7 +90,8 @@ export default {
                     this.messageData.message = ''
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    this.messageData.message = ''
+                    alert('No Connection')
                 })
         }
     }

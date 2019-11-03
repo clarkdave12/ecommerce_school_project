@@ -96,7 +96,10 @@ class FeedbackController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $fd = Feedback::find($id);
+        $fd->delete();
+        
+        return response()->json(['Success', 'Comment Deleted Successfully'], 200);
     }
 
     public function getUserFeedback($id) {

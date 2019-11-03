@@ -110,6 +110,7 @@ class CartsController extends Controller
 
         foreach($carts as $cart)
         {
+            
             $cart->delete();
         }
 

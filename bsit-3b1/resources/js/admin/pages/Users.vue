@@ -1,51 +1,58 @@
 <template>
-    <div class="container">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Addrerss</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
+    <div>
+        <h1>Manage Users</h1>
+
+        <v-simple-table dark>
+            <thead>
+                <th> NAME </th>
+                <th> EMAIL </th>
+                <th>ACTIONS</th>
             </thead>
             <tbody>
                 <tr v-for="user in users" :key="user.id">
-                    <td> {{ user.first_name }} </td>
-                    <td> {{ user.last_name }} </td>
-                    <td> {{ user.address }} </td>
+                    <td> {{ user.last_name }}, {{ user.first_name }} </td>
                     <td> {{ user.email }} </td>
                     <td>
-                        <div class="row">
-                            <div class="col-6">
-                                <button class="btn btn-danger">Delete</button>
-                            </div>
-                        </div>
+                        <v-btn small block color="error" @click="removeUser(user.id)">
+                            Remove
+                        </v-btn>
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </v-simple-table>
+
     </div>
 </template>
 
 <script>
 export default {
-    data () {
-        return {
-            users: [],
+    
+    computed:
+    {
+        users()
+        {
+            return this.$store.state.usersManage
         }
     },
 
-    mounted() {
-        this.getUserList()
+    created ()
+    {
+        this.$store.dispatch('GET_USERS_MANAGE')
+            .then(() => {
+                console.log(this.users)                
+            })
+            .catch(error => {
+                console.log(error)
+            })
     },
 
-    methods: {
-        getUserList() {
-            axios.get(getUserURL)
-                .then(response =>{
-                    this.users = response.data.users
+    methods: 
+    {
+        removeUser(id)
+        {
+            this.$store.dispatch('REMOVE_USER', id)
+                .then(() => {
+                    this.$store.dispatch('GET_USERS_MANAGE')
                 })
                 .catch(error => {
                     console.log(error)

@@ -46,4 +46,8 @@ Route::post('/validate', 'AppController@validateCaptcha');
 Route::get('/execute-payment/{id}', 'PaymentController@execute');
 Route::post('/create-payment/{id}/{total}', 'PaymentController@create')->name('create-payment');
 
+Route::get('/payments', 'OrdersController@index');
 Route::delete('/clear_cart/{user_id}', 'CartsController@clearCart');
+Route::get('/orders/{id}', 'OrdersController@history');
+Route::get('/manage_users', 'AppController@manageUsers');
+Route::delete('/remove_user/{id}', 'AppController@removeUser');

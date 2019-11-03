@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use GuzzleHttp\Client;
+use DB;
+use App\Role;
 
 class AppController extends Controller
 {
@@ -59,9 +61,27 @@ class AppController extends Controller
         return $user->role->name;
     }
 
-    public function getUserList() {
-        $user = User::orderBy('created_at', 'desc')->get();
+    public function manageUsers()
+    {
+        return DB::table('users')
+                    ->join('roles', 'users.id', '=', 'roles.user_id')
+                    ->select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.address')
+                    ->where('roles.name', 'User')
+                    ->get();
+    }
 
-        return response()->json(['users' => $user], 200); 
+    public function removeUser($id)
+    {
+        $user = User::find($id);
+        $roles = Role::where('user_id', $id)->get();
+
+        foreach($roles as $role)
+        {
+            $role->delete();
+        }
+
+        $user->delete();
+
+        return response()->json(['Success', 'User account removed successfully'], 200);
     }
 }

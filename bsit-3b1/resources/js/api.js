@@ -18,4 +18,8 @@ export const api = {
     messageAdmin: apiDomain + 'api/message_admin',
     messageUser: apiDomain + 'api/message_user',
     productSearch: apiDomain + 'api/product_search',
+    purchasedHistory: apiDomain + 'api/orders',
+    manageUsers: apiDomain + 'api/manage_users',
+    removeUser: apiDomain + 'api/remove_user',
+    payments: apiDomain + '/api/payments',
 }

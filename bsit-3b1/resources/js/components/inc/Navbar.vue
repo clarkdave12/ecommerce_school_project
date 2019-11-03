@@ -84,6 +84,19 @@
                 </v-list-item-content>
             </v-list-item>
 
+            <!-- PAYMENTS -->
+            <v-list-item link to="/payments" v-if="isAuth && isAdmin">
+                <v-list-item-icon>
+                    <v-icon>payment</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        Payments
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
             <!-- MESSAGING -->
             <v-list-item link to="/contact" v-if="isAuth">
                 <v-list-item-icon>
@@ -132,6 +145,19 @@
                 <v-list-item-content>
                     <v-list-item-title>
                         Cart
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <!-- HISTORY -->
+            <v-list-item link to="/history" v-if="isAuth && !isAdmin">
+                <v-list-item-icon>
+                    <v-icon>access_time</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>
+                        History
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>

@@ -69,6 +69,12 @@
                     <div> <strong> {{ feedback.first_name }} {{ feedback.last_name }} </strong> </div>
                     <v-rating small color="orange lighten-3" background-color="orange lighten-3" v-model="feedback.ratings"></v-rating>
                     <div> {{ feedback.comment }} </div>
+                    
+                    <v-row class="mt-2" v-if="isAuth && isAdmin">
+                        <v-btn color="error" small @click="removeComment(feedback.id)">
+                            remove comment
+                        </v-btn>
+                    </v-row>
                 </div>
             </v-card-text>
         </v-card>
@@ -122,6 +128,7 @@ export default {
                         this.isAdmin = false
                     }
                     else if(this.$store.state.user.role == 'Admin') {
+                        this.isAuth = true
                         this.isAdmin = true
                     }
                 })
@@ -177,6 +184,17 @@ export default {
             this.$store.dispatch('POST_FEEDBACK', data)
                 .then(() => {
                     bus.$emit('feedbackPosted')
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+
+        removeComment(id) {
+
+            this.$store.dispatch('REMOVE_COMMENT', id)
+                .then(() => {
+                     this.$store.dispatch('GET_FEEDBACKS', this.$route.params.id)
                 })
                 .catch(error => {
                     console.log(error)

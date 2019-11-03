@@ -7,6 +7,7 @@ import AddProduct from './admin/pages/AddProduct.vue';
 import ManageFeedbacks from './admin/pages/ManageFeedbacks.vue';
 import EditProduct from './admin/pages/EditProduct.vue';
 import Specs from './admin/pages/Specs.vue';
+import Payments from './admin/pages/Payments.vue';
 
 import Home from './pages/Home.vue';
 import Register from './pages/Register.vue';
@@ -21,6 +22,7 @@ import Message from './pages/Message.vue';
 import Builder from './builder/Builder.vue';
 import Contact from './pages/Contact.vue';
 import Success from './pages/SuccessfulPayment.vue';
+import History from './pages/History.vue';
 
 export const routes = [
     /* For Admin */
@@ -62,6 +64,11 @@ export const routes = [
     {
         path: '/specs/:product_id',
         component: Specs,
+    },
+    {
+        path: '/payments',
+        component: Payments,
+        meta: { forAdmin: true }
     },
 
     /* Other Routes */
@@ -123,5 +130,10 @@ export const routes = [
     {
         path: '/success',
         component: Success
+    },
+    {
+        path: '/history',
+        component: History,
+        meta: { forUser: true }
     }
 ]
