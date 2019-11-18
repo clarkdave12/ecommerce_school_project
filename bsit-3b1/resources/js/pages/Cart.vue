@@ -1,44 +1,41 @@
 <template>
     <v-container fluid>
-        <h3>Cart</h3>
+
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <h2> CART </h2>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="mx-3"> <h4><strong>Total Amount: </strong> PHP {{ totalAmount }}</h4> </div>
+                    <form :action="'http://localhost:8000/api/create-payment/' + user.id + '/' + totalAmount" method="post">
+                        <v-btn type="submit" color="success" class="mx-3">
+                            checkout
+                        </v-btn>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <v-divider></v-divider>
 
-        <v-expansion-panels dark>
-            <v-expansion-panel v-for="cart in carts" :key="cart.id">
-                <v-expansion-panel-header class="product-name">
-                    {{ cart.name }}
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                    <v-card flat>
-                        <img :src="'http://localhost:8000/' + cart.image" alt="cart.name">
-                        <v-card-subtitle>
-                            PHP {{ cart.price }} <br />
-                        </v-card-subtitle>
-                        <v-card-subtitle>
-                            QTY {{ cart.quantity }} <br />
-                        </v-card-subtitle>
-                    
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn class="red" @click="removeItem(cart.id)">remove</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-expansion-panels>
-
-        <v-footer fixed dark>
-            <div> <strong>Total Amount: </strong> <br> PHP {{ totalAmount }} </div>
-            <v-spacer></v-spacer>
-            <form :action="'http://localhost:8000/api/create-payment/' + user.id + '/' + totalAmount" method="post">
-                <v-btn type="submit" color="success">
-                    checkout
-                </v-btn>
-            </form>
-            <!-- <v-btn @click="checkout">
-                checkout
-            </v-btn> -->
-        </v-footer>
+        <div class="row" v-for="cart in carts" :key="cart.id">
+            <div class="col-sm-5 col-md-5 col-lg-5">
+                <img :src="'http://localhost:8000/' + cart.image" alt="cart.name">
+            </div>
+            <div class="col-sm-5 col-md-5 col-lg-5">
+                <h3><strong class="product-name">{{ cart.name }}</strong></h3>
+                <h5><strong>PHP {{ cart.price }}</strong></h5>
+                <h5><strong>QTY. {{ cart.quantity }}</strong></h5>
+                <br><br><br>
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <v-btn class="red" block @click="removeItem(cart.id)">remove</v-btn>
+                    </div>
+                </div>
+            </div>
+        </div>
     </v-container>
 </template>
 
@@ -81,12 +78,17 @@ export default {
     methods: {
 
         checkout() {
-            axios.post('http://localhost:8000/api/create-payment')
+            const data = {
+                userId: this.user.id,
+                totalAmount: this.totalAmount
+            }
+
+            axios.post('http://localhost:8000/api/create-payment', data)
                 .then(response => {
                     console.log(response)
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.log(error.response)
                 })
         },
 

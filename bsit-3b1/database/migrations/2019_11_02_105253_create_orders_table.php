@@ -17,14 +17,12 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
             $table->text('order_id');
-            $table->string('state');
-            $table->double('amount');
-            $table->string('cart');
+            $table->bigInteger('product_id')->unsigned();
+            $table->string('status');
+            $table->integer('quantity');
+            $table->double('price');
             $table->string('method');
-            $table->text('payer_id');
-            $table->string('payer_email');
-            $table->text('recipient_name');
-            $table->text('shipping_address');
+            $table->string('state');
             $table->timestamps();
         });
     }

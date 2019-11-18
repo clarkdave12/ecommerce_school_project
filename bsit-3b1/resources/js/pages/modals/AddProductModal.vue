@@ -2,7 +2,7 @@
     <span>
         <v-btn outlined small dark @click="isAdding = !isAdding"> Add Product </v-btn>
 
-        <v-dialog v-model="isAdding" dark>
+        <v-dialog v-model="isAdding" dark max-width="600">
             <v-card id="adding-card">
                 <v-card-title>
                     <span class="headline">
@@ -12,7 +12,7 @@
 
                 <v-container>
                     <v-row>
-                        <v-col cols="12" sm="6" md="4">
+                        <v-col cols="12">
                             <v-form @submit.prevent="addProduct()">
                                 <v-text-field label="Product Name" v-model="product.name"></v-text-field>
                                 <v-text-field label="Description" v-model="product.description"></v-text-field>

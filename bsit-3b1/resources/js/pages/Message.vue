@@ -1,25 +1,35 @@
 <template>
     <v-container>
-        <v-sheet dark id="chat-box" class="px-3 py-5" v-chat-scroll>
-            <div class="bubble-container" v-for="message in messages" :key="message.id">
-                <v-card class="sender mb-5" v-if="message.receiver == user.id">
-                    <v-card-text>
-                        {{ message.message }}
-                    </v-card-text>
-                </v-card>   
-                <v-card class="receiver ml-auto mb-5 primary" v-if="message.sender == user.id">
-                    <v-card-text>
-                        {{ message.message }}
-                    </v-card-text>
-                </v-card>
+        <div class="row">
+            <v-spacer></v-spacer>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <v-sheet dark id="chat-box" class="px-3 py-5" v-chat-scroll>
+                    <div class="bubble-container" v-for="message in messages" :key="message.id">
+                        <v-card class="sender mb-5" v-if="message.receiver == user.id">
+                            <v-card-text>
+                                {{ message.message }}
+                            </v-card-text>
+                        </v-card>   
+                        <v-card class="receiver ml-auto mb-5 primary" v-if="message.sender == user.id">
+                            <v-card-text>
+                                {{ message.message }}
+                            </v-card-text>
+                        </v-card>
+                    </div>
+                </v-sheet>
             </div>
-        </v-sheet>
+            <v-spacer></v-spacer>
+        </div>
 
         <v-footer dark fixed class="py-2 mt-3">
-                <input v-model="messageData.message" type="text" id="text-box" placeholder="Your message...">
-                <v-btn icon @click="send">
-                    <v-icon>send</v-icon>
-                </v-btn>
+                <v-spacer></v-spacer>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <input v-model="messageData.message" type="text" id="text-box" placeholder="Your message...">
+                    <v-btn icon @click="send">
+                        <v-icon>send</v-icon>
+                    </v-btn>
+                </div>
+                <v-spacer></v-spacer>
         </v-footer>
     </v-container>
 </template>
@@ -38,7 +48,7 @@ export default {
     },
     
     created () {
-
+        
         if(localStorage.getItem('token'))
         {
             this.$store.dispatch('USER_DATA')
@@ -119,6 +129,7 @@ export default {
 #chat-box {
     height: 80%;
     width: 100%;
+    min-height: 60vh;
     max-height: 80vh;
     overflow: scroll;
 }

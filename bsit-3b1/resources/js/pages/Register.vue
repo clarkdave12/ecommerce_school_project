@@ -1,42 +1,52 @@
 <template>
-    <div>
-        <v-container>
-            <h3 class="subheading" id="page-title">
-                register
-            </h3>
-            <v-divider></v-divider>
+    <v-container>
+        <div class="row">
+            <v-spacer></v-spacer>
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <h3 class="subheading" id="page-title">
+                    register
+                </h3>
+                <br>
+                <v-form @submit.prevent="register()">
+                    <v-text-field dark v-model="user.first_name" label="First Name" color="red" prepend-icon="perm_identity"></v-text-field>
+                    <span v-if="errors.first_name" class="errors"> {{ errors.first_name }} </span> <br>
+                    
+                    <v-text-field dark v-model="user.last_name" label="Last Name" color="red" prepend-icon="perm_identity"></v-text-field>
+                    <span v-if="errors.last_name" class="errors"> {{ errors.last_name[0] }} </span> <br>
+                    
+                    <v-textarea dark v-model="user.address" label="Address" color="red" prepend-icon="place"></v-textarea>
+                    <span v-if="errors.address" class="errors"> {{ errors.address[0] }} </span> <br>
 
-            <v-form @submit.prevent="register()">
-                <v-text-field dark v-model="user.first_name" label="First Name" color="red" prepend-icon="perm_identity"></v-text-field>
-                <span v-if="errors.first_name" class="errors"> {{ errors.first_name }} </span> <br>
-                
-                <v-text-field dark v-model="user.last_name" label="Last Name" color="red" prepend-icon="perm_identity"></v-text-field>
-                <span v-if="errors.last_name" class="errors"> {{ errors.last_name[0] }} </span> <br>
-                
-                <v-textarea dark v-model="user.address" label="Address" color="red" prepend-icon="place"></v-textarea>
-                <span v-if="errors.address" class="errors"> {{ errors.address[0] }} </span> <br>
+                    <v-text-field dark v-model="user.email" label="Email" color="red" prepend-icon="email"></v-text-field>
+                    <span v-if="errors.email" class="errors"> {{ errors.email[0] }} </span><br>
 
-                <v-text-field dark v-model="user.email" label="Email" color="red" prepend-icon="email"></v-text-field>
-                <span v-if="errors.email" class="errors"> {{ errors.email[0] }} </span><br>
+                    <v-text-field dark v-model="user.password" label="Password" color="red" prepend-icon="lock" type="password">
+                    </v-text-field>
+                    <span v-if="errors.password" class="errors"> {{ errors.password[0] }} </span> <br>
 
-                <v-text-field dark v-model="user.password" label="Password" color="red" prepend-icon="lock" type="password">
-                </v-text-field>
-                <span v-if="errors.password" class="errors"> {{ errors.password[0] }} </span> <br>
+                    <v-text-field dark v-model="confirmPassword" label="Confirm Password" color="red" prepend-icon="lock" type="password">                    
+                    </v-text-field>
+                    <span v-if="confirmError" class="errors"> {{ confirmError[0] }} </span> <br> <br>
 
-                <v-text-field dark v-model="confirmPassword" label="Confirm Password" color="red" prepend-icon="lock" type="password">                    
-                </v-text-field>
-                <span v-if="confirmError" class="errors"> {{ confirmError[0] }} </span> <br>
-
-                <v-row class="mb-3">
-                    <v-col sm="12">
-                        <vue-recaptcha ref="captcha" @verify="onVerify" size="small" theme="dark" sitekey="6Ld1ncAUAAAAAA6plTp_wHDP5bwIqehfUJZUBTjh"></vue-recaptcha>
-                    </v-col>
-                </v-row>
-
-                <v-btn block color="primary" type="submit"> Register </v-btn>
-            </v-form>
-        </v-container>
-    </div>
+                    <!-- <vue-recaptcha ref="captcha" @verify="onVerify" sitekey="6Ld1ncAUAAAAAA6plTp_wHDP5bwIqehfUJZUBTjh"></vue-recaptcha> -->
+                    <VueRecaptcha ref="captcha" @verify="onVerify" sitekey="6Ld1ncAUAAAAAA6plTp_wHDP5bwIqehfUJZUBTjh" :loadRecaptchaScript="true"></VueRecaptcha>
+                    <div class="row">
+                        <v-spacer></v-spacer>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <v-btn block color="primary" type="submit"> Register </v-btn>
+                        </div>
+                        <v-spacer></v-spacer>
+                    </div>
+                </v-form>
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6 links">
+                        <router-link to="/login">Already have an account?</router-link>
+                    </div>
+                </div>
+            </div>
+            <v-spacer></v-spacer>
+        </div>
+    </v-container>
 </template>
 
 <script>
@@ -119,6 +129,10 @@ export default {
 
 v-form {
     color: white;
+}
+
+.links {
+    text-align: center;
 }
 
 #captcha {

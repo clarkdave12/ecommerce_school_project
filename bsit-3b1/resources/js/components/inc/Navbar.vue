@@ -1,41 +1,25 @@
 <template>
     <div>
         <v-app-bar :dark="darkMode">
+            <!-- Humburger menu -->
+            <v-btn icon @click="drawer = !drawer">
+                <v-icon>menu</v-icon>
+            </v-btn>
+
             <v-toolbar-title>
                 <router-link id="brand-name" to="/" tag="span">PCTECH</router-link>
             </v-toolbar-title>
+
             <v-spacer></v-spacer>
-            <v-btn outlined x-small class="mx-3 hidden-sm-and-down">
-                <router-link to="/products" tag="span" style="cursor: pointer">Products</router-link>
-            </v-btn>
-
-            <!-- Admin -->
-            <v-btn v-if="isAuth && isAdmin" outlined x-small class="mx-3 hidden-sm-and-down">
-                <router-link to="/admin/categories" tag="span" style="cursor: pointer">categories</router-link>
-            </v-btn>
-
-            <!-- User -->
-            <v-btn v-if="isAuth && !isAdmin" outlined x-small class="mx-3 hidden-sm-and-down">
-                <router-link :to="'/profile/' + user_id" tag="span" style="cursor: pointer">Profile</router-link>
-            </v-btn>
-
+            <!-- Authenticated User -->
+            <v-btn v-if="isAuth" text @click="logout()" class="mx-3 hidden-sm-and-down">LOGOUT</v-btn>
             <!-- Guest -->
-            <v-btn v-if="!isAuth" outlined x-small class="mx-3 hidden-sm-and-down">
-                <router-link to="/login" tag="span" style="cursor: pointer">Login</router-link>
-            </v-btn>
-
-            <v-btn v-if="!isAuth" outlined x-small class="mx-3 hidden-sm-and-down">
-                <router-link to="/register" tag="span" style="cursor: pointer">Register</router-link>
-            </v-btn>
-
-            <!-- Humburger menu -->
-            <v-btn icon class="hidden-md-and-up" @click="drawer = !drawer">
-                <v-icon>menu</v-icon>
-            </v-btn>
+            <router-link to="/login" style="cursor: pointer" class="mx-3 hidden-sm-and-down" tag="span" v-if="!isAuth">LOGIN</router-link>
+            <router-link to="/register" style="cursor: pointer" class="mx-3 hidden-sm-and-down" tag="span" v-if="!isAuth">REGISTER</router-link>
         </v-app-bar>
 
 
-        <v-navigation-drawer class="hidden-md-and-up" v-model="drawer" app dark>
+        <v-navigation-drawer temporary v-model="drawer" app dark>
 
             <v-layout column align-center v-if="isAuth">
                 <v-flex class="mt-5">
@@ -124,7 +108,7 @@
             </v-list-item> -->
 
             <!-- BUILDER -->
-            <v-list-item link to="/builder" v-if="isAuth && !isAdmin">
+            <!-- <v-list-item link to="/builder" v-if="isAuth && !isAdmin">
                 <v-list-item-icon>
                     <v-icon>build</v-icon>
                 </v-list-item-icon>
@@ -134,7 +118,7 @@
                         Builder
                     </v-list-item-title>
                 </v-list-item-content>
-            </v-list-item>
+            </v-list-item> -->
 
             <!-- SHOPPING CART -->
             <v-list-item link :to="'/cart/' + user_id" v-if="isAuth && !isAdmin">
@@ -292,6 +276,15 @@ export default {
     }
 
     #brand-name {
+        color: red;
+        font-weight: 900;
+        font-size: 1.5em;
+        font-family: 'batmfa';
+        cursor: pointer;
+    }
+
+    #brand-name2 {
+        margin-left: 70px;
         color: red;
         font-weight: 900;
         font-size: 1.5em;

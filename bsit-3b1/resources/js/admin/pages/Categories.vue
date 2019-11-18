@@ -31,7 +31,7 @@
         </div>
 
         <!-- For Adding Category -->
-        <v-dialog v-model="add" scrollable>
+        <v-dialog max-width="600" v-model="add" scrollable>
             <v-card dark>
                 <form @submit.prevent="addCategory()">
                     <v-card-title>
@@ -41,7 +41,7 @@
                     <v-card-text>
                         <v-container>
                             <v-row>
-                                <v-col cols="12" sm="6" md="4">
+                                <v-col>
                                     <v-text-field v-model="category.name" dark label="Category Name"></v-text-field>
 
                                     <v-btn class="primary my-3" @click="onPickFile">Choose Image</v-btn>
@@ -63,7 +63,7 @@
         </v-dialog>
 
         <!-- For Updating Category -->
-        <v-dialog v-model="isUpdating" scrollable>
+        <v-dialog v-model="isUpdating" scrollable max-width="600">
             <v-card dark>
                 <form @submit.prevent="updateCategory()">
                     <v-card-title>
@@ -73,7 +73,7 @@
                     <v-card-text>
                         <v-container>
                             <v-row>
-                                <v-col cols="12" sm="6" md="4">
+                                <v-col>
                                     <v-text-field v-model="update.name" dark label="Category Name"></v-text-field>
 
                                     <v-btn class="primary my-3" @click="updateOnPickFile">Choose Image</v-btn>

@@ -43,11 +43,22 @@ Route::get('/message_user', 'MessagesController@messageUSer');
 Route::post('/product_search', 'ProductsController@productSearch');
 Route::post('/validate', 'AppController@validateCaptcha');
 
-Route::get('/execute-payment/{id}', 'PaymentController@execute');
-Route::post('/create-payment/{id}/{total}', 'PaymentController@create')->name('create-payment');
+Route::get('/execute-payment/{id}/{totalAmount}', 'PaymentController@execute');
+Route::post('/create-payment/{id}/{totalAmount}', 'PaymentController@create')->name('create-payment');
 
 Route::get('/payments', 'OrdersController@index');
 Route::delete('/clear_cart/{user_id}', 'CartsController@clearCart');
 Route::get('/orders/{id}', 'OrdersController@history');
+Route::get('/get_history_products/{order_id}', 'OrdersController@historyProducts');
+
 Route::get('/manage_users', 'AppController@manageUsers');
 Route::delete('/remove_user/{id}', 'AppController@removeUser');
+
+Route::get('/getorders', 'AppController@getOrders');
+Route::get('/shipping_info/{id}', 'AppController@getShippingInfo');
+
+Route::get('/get_sales/{month}/{year}', 'SalesController@getSales');
+Route::post('/send_code', 'SendCode@send');
+Route::post('/verify_code', 'SendCode@verifyCode');
+Route::get('/validate_email/{email}', 'SendCode@validateEmail');
+Route::post('/reset_password', 'SendCode@resetPassword');

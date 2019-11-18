@@ -1,37 +1,43 @@
 <template>
     <!-- Product Details -->
-    <v-container fluid>
-        <v-card outlined dark>
-            <img :src="'http://localhost:8000/' + product.image" alt="">
-            <br>
-            <v-card-title class="product-name">
-                {{ product.name }}
-            </v-card-title>
-            <v-card-subtitle>
+    <v-container>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <img :src="'http://localhost:8000/' + product.image" alt="">
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <h3 class="product-name"> {{ product.name }} </h3>
                 <v-rating small 
                             readonly 
                             color="orange lighten-3" 
                             background-color="orange lighten-3" 
                             v-model="ratings"
                             ></v-rating>
-                    <br>
-                PHP {{ product.price }}
-            </v-card-subtitle>
-            
-            <v-card-text>
-                <strong>DESCRIPTION</strong> <br>
-                {{ product.description }}
-            </v-card-text>
-            <v-card-actions>
-                <v-btn :to="'/specs/' + product.id" color="success"> Show Specs </v-btn>
-            </v-card-actions>
-        </v-card>
+                <br>
+                <h4><strong>Price: </strong> PHP {{ product.price }} </h4>
 
-        <v-btn v-if="isAuth && !isAdmin" block class="my-4" color="primary" @click="isOrdering = !isOrdering"> Add to Cart </v-btn>
-        <v-btn v-else-if="!isAuth && !isAdmin" block class="my-4" color="primary" @click="notAuth"> Add to Cart </v-btn>
+                <p> {{ product.description }} </p>
+
+                <v-btn :to="'/specs/' + product.id" color="success"> Show Specs </v-btn>
+                <div class="row hidden-md-and-down" id="cart">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <v-btn v-if="isAuth && !isAdmin" block color="primary" @click="isOrdering = !isOrdering"> Add to Cart </v-btn>
+                        <v-btn v-else-if="!isAuth && !isAdmin" block color="primary" @click="notAuth"> Add to Cart </v-btn>
+                    </div>
+                    <v-spacer></v-spacer>
+                </div>
+            </div>
+        </div>
+
+        <div class="row hidden-md-and-up">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <v-btn v-if="isAuth && !isAdmin" block color="primary" @click="isOrdering = !isOrdering"> Add to Cart </v-btn>
+                <v-btn v-else-if="!isAuth && !isAdmin" block color="primary" @click="notAuth"> Add to Cart </v-btn>
+            </div>
+        </div>
 
         <!-- Ordering Process-->
-        <v-dialog v-model="isOrdering">
+        <v-dialog max-width="600" v-model="isOrdering" dark>
             <v-card>
                 <img :src="'http://localhost:8000/' + product.image" :alt="product.name">
 
@@ -81,7 +87,6 @@
 
         <v-textarea v-if="isAuth && !isAdmin" v-model="comment" label="Comment" class="my-3" dark></v-textarea>
         <v-btn block class="success" v-if="isAuth && !isAdmin" @click="postFeedback()">Comment</v-btn>
-        <v-btn block class="success" v-else-if="!isAuth && !isAdmin" to="/login" tag="span">Comment</v-btn>
 
     </v-container>
 </template>
@@ -205,6 +210,11 @@ export default {
 </script>
 
 <style scoped>
+
+    * {
+        color: white;
+    }
+
     img {
         height: 80%;
         width: 100%;
@@ -218,6 +228,10 @@ export default {
     #feedback-title {
         font-family: 'batmfa';
         font-weight: 600;
+    }
+
+    #cart {
+        margin-top: 65px;
     }
 
 </style>

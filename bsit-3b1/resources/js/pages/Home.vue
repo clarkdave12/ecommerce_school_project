@@ -1,25 +1,24 @@
 <template>
     <v-container>
-
-        <h3 id="page-title">Products</h3>
-        <v-divider></v-divider>
-        
+        <div class="row">
+            <div class="col-sm-12 col-lg-8">
+                <h3 id="page-title">Products</h3>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+                <input @keyup="searchProduct" type="text" id="search-bar" placeholder="Search Product" v-model="search">
+                <v-btn icon small dark @click="searchProduct">
+                    <v-icon>search</v-icon>
+                </v-btn>
+            </div>
+        </div>
         <v-row>
             <v-col>
                 <AddProduct v-if="isAuth && isAdmin"></AddProduct>
             </v-col>
         </v-row>
 
-        <v-row>
-            <input @keyup="searchProduct" type="text" id="search-bar" placeholder="Search Product" v-model="search">
-            <v-btn icon small dark @click="searchProduct">
-                <v-icon>search</v-icon>
-            </v-btn>
-        </v-row>
-
-        <!-- Product List -->
-        <v-row v-for="product in products" :key="product.id" sm="12">
-            <v-col>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4" v-for="product in products" :key="product.id">
                 <v-card dark class="product-card">
                     <img @click="gotoDetails(product.id)" height="200" class="product-image" :src="'http://localhost:8000/' + product.image">
 
@@ -61,8 +60,8 @@
                         </v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-col>
-        </v-row>
+            </div>
+        </div>
 
         <!-- Adding to Cart Modal -->
         <v-dialog v-model="isAddingToCart">

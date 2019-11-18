@@ -1,32 +1,41 @@
 <template>
     <v-container>
-        <header>Payments</header>
-        <v-card dark v-for="payment in payments" :key="payment.id">
-            <v-card-title>
-                {{ payment.order_id }}
-            </v-card-title>
-            <v-card-text>
-                Mode of payment: {{ payment.method }} <br>
-                Customer Name: {{ payment.recipient_name }} <br>
-                Address: {{ payment.shipping_address }} <br>
-                State: {{ payment.state }}
-            </v-card-text>
-        </v-card>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4" v-for="order in orders" :key="order.id">
+                <v-card dark>
+                    <v-card-title> {{ order.order_id }} </v-card-title>
+                    <v-card-text>
+                        <strong>Status: </strong> {{ order.status }} <br>
+                        <strong>Method: </strong> {{ order.method }} <br>
+                        <strong>State: </strong> {{ order.state }} <br>
+                        <strong>Date: </strong> {{ order.created_at }} <br>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn text :to="'/order_details/' + order.user_id + '/' + order.product_id + '/' + order.quantity"> Details </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </div>
+        </div>
     </v-container>
 </template>
 
 <script>
 export default {
-    
-     computed: {
 
-         payments() {
-             return this.$store.state.payments
-         }
-     },
+    data () {
+        return {
+            orders: []
+        }
+    },
 
-    created () {
-        this.$store.dispatch('GET_PAYMENTS')
+    created() {
+        axios.get('http://localhost:8000/api/getorders')
+            .then(response => {
+                this.orders = response.data
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
     }
 }
 </script>

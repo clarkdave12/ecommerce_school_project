@@ -23,6 +23,9 @@ import Builder from './builder/Builder.vue';
 import Contact from './pages/Contact.vue';
 import Success from './pages/SuccessfulPayment.vue';
 import History from './pages/History.vue';
+import OrderDetails from './admin/pages/OrderDetails.vue';
+import ForgotPassword from './pages/ForgotPassword.vue';
+import ResetPassword from './pages/ResetPassword.vue';
 
 export const routes = [
     /* For Admin */
@@ -69,6 +72,11 @@ export const routes = [
         path: '/payments',
         component: Payments,
         meta: { forAdmin: true }
+    },
+    {
+        path: '/order_details/:user_id/:product_id/:quantity',
+        component: OrderDetails,
+        meta: { forAdmin: true }  
     },
 
     /* Other Routes */
@@ -135,5 +143,15 @@ export const routes = [
         path: '/history',
         component: History,
         meta: { forUser: true }
+    },
+    {
+        path: '/forgot_password',
+        component: ForgotPassword,
+        meta: { forGuest: true }
+    },
+    {
+        path: '/reset_password',
+        component: ResetPassword,
+        meta: { forGuest: true }
     }
 ]

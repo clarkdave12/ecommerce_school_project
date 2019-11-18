@@ -7,6 +7,7 @@ use App\User;
 use GuzzleHttp\Client;
 use DB;
 use App\Role;
+use App\Order;
 
 class AppController extends Controller
 {
@@ -83,5 +84,15 @@ class AppController extends Controller
         $user->delete();
 
         return response()->json(['Success', 'User account removed successfully'], 200);
+    }
+
+    public function getOrders()
+    {
+        return Order::orderBy('created_at', 'desc')->get();
+    }
+
+    public function getShippingInfo($id)
+    {
+        return User::find($id);
     }
 }

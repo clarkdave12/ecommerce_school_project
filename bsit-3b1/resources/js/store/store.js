@@ -185,11 +185,13 @@ export const store = new Vuex.Store({
 
         GET_PRODUCTS: ({commit}) => {
             commit('SET_LOADER', true)
+
             return new Promise((resolve, reject) => {
                 axios.get(api.products)
                     .then(({data}) => {
                         commit('SET_PRODUCTS', data.products)   
-                        commit('SET_LOADER', false)         
+                        commit('SET_LOADER', false)      
+                        console.log(data)      
                         resolve(true)
                     })
                     .catch(error => {

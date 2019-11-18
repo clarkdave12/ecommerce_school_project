@@ -3,8 +3,10 @@
         <Navbar />
 
         <v-content>
-            <router-view></router-view>
-            <loader></loader>
+            <v-container fluid>
+                <router-view></router-view>
+                <loader></loader>
+            </v-container>
         </v-content>
     </v-app>
 </template>

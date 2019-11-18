@@ -31,11 +31,15 @@
         </v-row>
 
         <v-footer dark fixed v-if="isAdmin">
-            <v-text-field label="Label" v-model="label" dark></v-text-field>
-            <v-text-field label="Specs" v-model="spec" dark></v-text-field>
-            <v-btn color="success" block @click="addSpecification">
-                add specification
-            </v-btn>
+            <v-spacer></v-spacer>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <v-text-field label="Label" v-model="label" dark></v-text-field>
+                <v-text-field label="Specs" v-model="spec" dark></v-text-field>
+                <v-btn color="success" block @click="addSpecification">
+                    add specification
+                </v-btn>
+            </div>
+            <v-spacer></v-spacer>
         </v-footer>
     </v-container>
 </template>

@@ -4,7 +4,7 @@
             <span>Edit</span>
         </v-btn>
 
-        <v-dialog v-model="isUpdating" dark>
+        <v-dialog v-model="isUpdating" dark max-width="600">
             <v-card>
                 <v-card-title>
                     <span class="headline">
@@ -14,7 +14,7 @@
 
                 <v-container>
                     <v-row>
-                        <v-col cols="12" sm="6" md="4">
+                        <v-col>
                             <v-form @submit.prevent="update()">
                                 <v-text-field label="Product Name" v-model="product.name"></v-text-field>
                                 <v-text-field label="Description" v-model="product.description"></v-text-field>

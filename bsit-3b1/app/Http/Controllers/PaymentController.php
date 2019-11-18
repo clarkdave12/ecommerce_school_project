@@ -15,11 +15,14 @@ use PayPal\Api\Transaction;
 use PayPal\Api\PaymentExecution;
 
 use App\Order;
+use App\User;
+use App\Cart;
+use App\Sale;
 
 class PaymentController extends Controller
 {
 
-    public function create($id, $total)
+    public function create($id, $totalAmount)
     {
 
         $apiContext = new \PayPal\Rest\ApiContext(
@@ -33,12 +36,12 @@ class PaymentController extends Controller
         $payer->setPaymentMethod("paypal");
 
         $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl('http://localhost:8000/api/execute-payment/' . $id)
+        $redirectUrls->setReturnUrl('http://localhost:8000/api/execute-payment/' . $id . '/' . $totalAmount)
                      ->setCancelUrl('http://localhost:8000/cancel');
 
         $amount = new Amount();
         $amount->setCurrency("PHP")
-        ->setTotal($total);
+        ->setTotal($totalAmount);
 
         $transaction = new Transaction();
         $transaction->setAmount($amount)
@@ -56,7 +59,7 @@ class PaymentController extends Controller
         
     }
 
-    public function execute($id)
+    public function execute($id, $totalAmount)
     {
 
         $apiContext = new \PayPal\Rest\ApiContext(
@@ -76,24 +79,30 @@ class PaymentController extends Controller
         $result = $payment->execute($execution, $apiContext);
 
         $amount = 0;
+        /* Getting user information */
+        $user = User::find($id);
 
-        foreach($result->transactions as $transaction)
+        $products = Cart::where('user_id', $id)->get();
+
+        foreach($products as $product)
         {
-            $amount += $transaction->amount->total;
+            $order = new Order();
+            $order->user_id = $id;
+            $order->order_id = $result->id;
+            $order->product_id = $product->product_id;
+            $order->state = $result->state;
+            $order->quantity = $product->quantity;
+            $order->price = $product->price;
+            $order->status = "For Shipping";
+            $order->method = $result->payer->payment_method;
+            $order->save();
         }
 
-        $order = new Order();
-        $order->user_id = $id;
-        $order->order_id = $result->id;
-        $order->state = $result->state;
-        $order->amount = $amount;
-        $order->cart = $result->cart;
-        $order->method = $result->payer->payment_method;
-        $order->payer_id = $result->payer->payer_info->payer_id;
-        $order->payer_email = $result->payer->payer_info->email;
-        $order->recipient_name = $result->payer->payer_info->shipping_address->recipient_name;
-        $order->shipping_address = $result->payer->payer_info->shipping_address->line1 . ' ' . $result->payer->payer_info->shipping_address->city;
-        $order->save();
+        $sale = new Sale();
+        $sale->user_id = $id;
+        $sale->amount = $totalAmount;
+        $sale->order_id = $result->id;
+        $sale->save();
 
         return redirect('http://localhost:8000/success');
     }
