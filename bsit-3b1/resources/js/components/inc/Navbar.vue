@@ -1,13 +1,15 @@
 <template>
     <div>
-        <v-app-bar :dark="darkMode">
+        <v-app-bar :dark="darkMode" fixed>
             <!-- Humburger menu -->
             <v-btn icon @click="drawer = !drawer">
                 <v-icon>menu</v-icon>
             </v-btn>
 
             <v-toolbar-title>
-                <router-link id="brand-name" to="/" tag="span">PCTECH</router-link>
+                <!-- <router-link id="brand-name" to="/" tag="span"></router-link> -->
+                <img id="logo" class="hidden-md-and-down" src="http://localhost:8000/images/logo.png" alt="">
+                <img id="logomobile" class="hidden-sm-and-up" src="http://localhost:8000/images/logo.png" alt="">
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -82,7 +84,7 @@
             </v-list-item>
 
             <!-- MESSAGING -->
-            <v-list-item link to="/contact" v-if="isAuth">
+            <v-list-item link to="/messages" v-if="isAuth">
                 <v-list-item-icon>
                     <v-icon>chat</v-icon>
                 </v-list-item-icon>
@@ -260,6 +262,16 @@ export default {
 </script>
 
 <style scoped>
+
+    #logo {
+        max-height: 50px;
+    }
+
+    #logomobile {
+        max-height: 50px;
+        width: 80%;
+    }
+
     iframe {
         margin-left: 60px;
         align-items: center;

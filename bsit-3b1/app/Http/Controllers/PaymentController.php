@@ -18,6 +18,7 @@ use App\Order;
 use App\User;
 use App\Cart;
 use App\Sale;
+use App\Popular;
 
 class PaymentController extends Controller
 {
@@ -96,6 +97,14 @@ class PaymentController extends Controller
             $order->status = "For Shipping";
             $order->method = $result->payer->payment_method;
             $order->save();
+        }
+
+        $pop = new Popular();
+        foreach($products as $product)
+        {
+            $pop->product_id = $product->product_id;
+            $pop->sold = $product->quantity;
+            $pop->save();
         }
 
         $sale = new Sale();

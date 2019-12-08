@@ -258,16 +258,13 @@ export const store = new Vuex.Store({
         },
 
         GET_CART: ({commit}, payload) => {
-            commit('SET_LOADER', true)
             return new Promise((resolve, reject) => {
                 axios.get(api.carts + '/' + payload)
                     .then(({data}) => {
                         commit('SET_CART', data)
-                        commit('SET_LOADER', false)
                         resolve(true)
                     })
                     .catch(error => {
-                        commit('SET_LOADER', false)
                         reject(error)
                     })
             })

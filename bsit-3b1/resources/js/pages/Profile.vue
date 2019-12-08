@@ -1,54 +1,64 @@
 <template>
-    <v-container>
-            <!-- User Profile Information -->
-            <v-layout column align-center>
-                <v-flex>
-                    <v-avatar size="100">
-                        <img src="http://localhost:8000/images/monitor.jpeg" alt="profile">
-                    </v-avatar>
-                </v-flex>
-                <v-flex>
-                    <div class="mt-3" id="profile-name-container"> <h4 id="profile-name"> {{ userProfile.first_name }} {{ userProfile.last_name }} </h4> </div>
-                </v-flex>
-                <v-flex> <header> {{ userProfile.email }} </header> </v-flex>
-                <v-flex>
-                    <div> <p> {{ userProfile.address }} </p> </div>
-                </v-flex>
-            </v-layout>
+    <div id="wrapper">
+        <div class="row hidden-sm-and-down" id="header-box">
+            <div>
+                <v-avatar size="100px" class="ml-8 mt-5">
+                    <img src="http://localhost:8000/images/monitor.jpeg" alt="">
+                </v-avatar>
+            </div>
+            <div class="pt-8 ml-4">
+                <h2 id="profile-name" class="mt-4">Clark Dave Ibarreta</h2>
+            </div>
+            <v-spacer></v-spacer>
 
-            <v-footer fixed dark>
-                <v-btn block dark color="primary" @click="profileUpdating = true"> update profile </v-btn>
-            </v-footer>
+            <div class="pt-8 mr-4">
+                <v-btn class="mt-3" x-large icon dark to="/change_profile">
+                    <v-icon>settings</v-icon>
+                </v-btn>
+            </div>
+        </div>
 
-            <!-- Update Profile Info Modal -->
-            <v-dialog v-model="profileUpdating">
+        <!-- Mobile view -->
+        <v-list-item class="hidden-md-and-up">
+                <v-list-item-avatar>
+                    <img src="http://localhost:8000/images/monitor.jpeg" alt="">
+                </v-list-item-avatar>
+                <v-list-item-content>
+                    <v-list-item-title v-text="profileInfo.first_name + ' ' + profileInfo.last_name"></v-list-item-title>
+                </v-list-item-content>
+
+                <v-list-item-icon>
+                    <v-btn dark icon small to="/change_profile">
+                        <v-icon>
+                            settings
+                        </v-icon>
+                    </v-btn>
+                </v-list-item-icon>
+            </v-list-item>
+
+        <div id="history-title">
+            <h3>
+                My Purchased History
+            </h3>
+        </div>
+
+        <!-- Purchased History -->
+        <div class="row">
+            <div class="col-sm-4 col-md-2 col-lg-2" v-for="history in histories" :key="history.id">
                 <v-card dark>
-                    <v-form @submit.prevent="updateProfile">
-                        <v-card-title id="modal-title">Update Profile</v-card-title>
-
-                        <v-card-text>
-                            <v-text-field label="First Name"
-                                            v-model="profileInfo.first_name"></v-text-field>
-
-                            <v-text-field label="Last Name"
-                                            v-model="profileInfo.last_name"></v-text-field>
-
-                            <v-text-field label="Address"
-                                            v-model="profileInfo.address"></v-text-field>
-
-                            <v-text-field label="Email"
-                                            v-model="profileInfo.email"></v-text-field>
-                        </v-card-text>
-
-                        <v-card-actions>
-                            <v-btn text color="error" @click="profileUpdating = false">Cancel</v-btn>
-                            <v-spacer></v-spacer>
-                            <v-btn color="success" type="submit">Update</v-btn>
-                        </v-card-actions>
-                    </v-form>
+                    <img class="images" :src="'http://localhost:8000/' + history.image" :alt="history.name">
+                    <v-card-title>
+                        {{ history.name }}
+                    </v-card-title>
+                    <v-card-text>
+                       Quantity:  <strong>{{ history.quantity }}</strong> <br>
+                       Price:  <strong>{{ history.price }}</strong> <br>
+                       Status:  <strong> {{ history.status }} </strong>
+                    </v-card-text>
                 </v-card>
-            </v-dialog>
-    </v-container>
+            </div>
+        </div>
+    </div>    
 </template>
 
 
@@ -58,7 +68,8 @@ export default {
     data () {
         return {
             profileUpdating: false,
-            profileInfo: {}
+            profileInfo: {},
+            histories: []
         }
     },
 
@@ -72,14 +83,28 @@ export default {
         this.$store.dispatch('GET_PROFILE', this.$route.params.user_id)
             .then(() => {
                 this.profileInfo = this.userProfile
+                this.getProfileHistory()
             })
             .catch(error => {
                 console.log(error)
             })
+
+
         
     },
 
     methods: {
+
+        getProfileHistory () {
+            axios.get(api.profile_history + '/' + this.profileInfo.id)
+                .then(response => {
+                    this.histories = response.data
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+        },
+
         getUserProfile () {
             axios.get(userProfileURL + '/' + this.$route.params.user_id)
                 .then(response => {
@@ -112,18 +137,43 @@ export default {
 
 <style scoped>
 
+    #history-title {
+        font-family: 'batmfa';
+        margin-top: 30px;
+    }
+
+    .images {
+        width: 100%;
+    }
+
+    #line {
+        margin-bottom: 20px;
+        width: 100%;
+        height: 5px;
+        background: #fff;
+    }
+
     * {
         color: #ffffff;
     }
 
-    #profile-name-container h4 {
-        justify-content: center;
+    #profile-name {
+        font-weight: 800;
         font-family: 'batmfa';
-        font-size: 1.3em;
+        font-size: 1.8rem;
     }
 
     #modal-title {
         font-family: 'batmfa';
+    }
+
+    #header-row {
+        margin-bottom: 20px;
+    }
+
+    #header-box {
+        padding-bottom: 20px;
+        border-bottom: 1px solid white;
     }
 
 </style>

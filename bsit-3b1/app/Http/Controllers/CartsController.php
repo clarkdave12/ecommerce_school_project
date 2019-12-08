@@ -58,7 +58,7 @@ class CartsController extends Controller
     {
         $cart = DB::table('carts')
                     ->join('products', 'carts.product_id', '=', 'products.id')
-                    ->select('carts.id', 'products.image', 'products.name', 'carts.quantity', 'carts.price', 'carts.created_at')
+                    ->select('carts.id', 'products.image', 'products.price AS product_price', 'products.name', 'carts.quantity', 'carts.price AS cart_price', 'carts.created_at')
                     ->where('carts.user_id', $id)
                     ->orderBy('carts.created_at', 'desc')
                     ->get();
@@ -115,5 +115,16 @@ class CartsController extends Controller
         }
 
         return response()->json(['Success' => 'Payment Successfull'], 200);
+    }
+
+    public function changeQuantity(Request $request)
+    {
+        $total = $request->product_price * $request->quantity;
+        $cart = Cart::find($request->id);
+        $cart->quantity = $request->quantity;
+        $cart->price = $total;
+        $cart->save();
+
+        return response()->json(['success' => 'Quantity Updated'], 200);
     }
 }

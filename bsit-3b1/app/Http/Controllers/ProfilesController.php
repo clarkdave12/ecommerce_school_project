@@ -69,7 +69,8 @@ class ProfilesController extends Controller
     {
          $data = DB::table('profiles')
                     ->rightjoin('users', 'users.id', '=', 'profiles.user_id')
-                    ->select('users.first_name',
+                    ->select('users.id',
+                             'users.first_name',
                              'users.last_name',
                              'users.email',
                              'users.address',)

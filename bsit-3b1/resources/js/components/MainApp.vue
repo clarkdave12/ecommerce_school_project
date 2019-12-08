@@ -2,11 +2,11 @@
     <v-app id="bg" dark>
         <Navbar />
 
-        <v-content>
-            <v-container fluid>
+        <v-content id="content">
+            <div class="container-fluid">
                 <router-view></router-view>
                 <loader></loader>
-            </v-container>
+            </div>
         </v-content>
     </v-app>
 </template>
@@ -46,8 +46,13 @@ export default {
     }
 
     #bg {
-        background: url('../img/metal-bg.jpg');
+        /* background: url('../img/metal-bg.jpg'); */
+        background: #808080;
         min-height: 100vh;
+    }
+
+    #content {
+        margin-top: 70px;
     }
 
 </style>

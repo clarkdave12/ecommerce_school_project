@@ -95,4 +95,59 @@ class AppController extends Controller
     {
         return User::find($id);
     }
+
+    public function changeProfile($id)
+    {
+        return User::find($id);
+    }
+
+    public function changeEMail(Request $request) 
+    {
+        $user = User::find($request->id);
+
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json(['success' => 'Email changed successfully'], 200);
+    }
+
+    public function changeFirstname(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->first_name = $request->first_name;
+        $user->save();
+
+        return response()->json(['success' => 'First name changed successfully'], 200);
+    }
+
+    public function changeLastname(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->last_name = $request->last_name;
+        $user->Save();
+
+        return response()->json(['success' => 'Last name changed successfully'], 200);
+    }
+
+    public function changeAddress(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->address = $request->address;
+        $user->save();
+
+        return response()->json(['success' => 'Address changed successfully'], 200);
+    }
+
+    public function checkPassword(Request $request)
+    {
+        $this->validate($request, [
+            'password' => 'required|min:8'
+        ]);
+
+        $user = User::find($request->id);
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response()->json(['success' => 'Password changed successfully'], 200);
+    }
 }

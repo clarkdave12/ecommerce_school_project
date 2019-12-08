@@ -6,14 +6,10 @@ use Illuminate\Http\Request;
 use App\Product;
 use Illuminate\Support\Str;
 use DB;
+use App\Popular;
 
 class ProductsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $products = Product::orderBy('created_at', 'desc')->get();
@@ -21,22 +17,6 @@ class ProductsController extends Controller
         return response()->json(['products' => $products], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $exploded = explode(',', $request->image);
@@ -64,12 +44,6 @@ class ProductsController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $product = Product::find($id);
@@ -77,24 +51,11 @@ class ProductsController extends Controller
         return response()->json(['product' => $product], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
@@ -134,12 +95,6 @@ class ProductsController extends Controller
         return response()->json(['Message' => 'Updated Successfully'], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $product = Product::find($id);
@@ -152,5 +107,25 @@ class ProductsController extends Controller
     public function productSearch(Request $request) 
     {
         return Product::where('name', 'like', '%' . $request->search . '%')->get();
+    }
+
+    public function newProducts()
+    {
+        return Product::orderBy('created_at', 'desc')->limit(8)->get();
+    }
+
+    public function getMostPopular()
+    {
+        return DB::table('populars')
+                ->join('products', 'populars.product_id', '=', 'products.id')
+                ->select('products.id', 'products.name', 'products.description', 'products.price', 'products.image', 'populars.sold')
+                ->orderBy('populars.sold', 'desc')
+                ->limit(10)
+                ->get();
+    }
+
+    public function searchByCategory($id)
+    {
+        return Product::orderBy('created_at', 'desc')->where('category_id', $id)->get();
     }
 }

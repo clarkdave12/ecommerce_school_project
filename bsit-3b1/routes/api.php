@@ -62,3 +62,20 @@ Route::post('/send_code', 'SendCode@send');
 Route::post('/verify_code', 'SendCode@verifyCode');
 Route::get('/validate_email/{email}', 'SendCode@validateEmail');
 Route::post('/reset_password', 'SendCode@resetPassword');
+
+Route::get('/profile_history/{id}', 'OrdersController@profileHistory');
+Route::get('/get_change_profile/{id}', 'AppController@changeProfile');
+Route::post('/change_email', 'AppController@changeEmail');
+Route::post('/change_firstname', 'AppController@changeFirstname');
+Route::post('/change_lastname', 'AppController@changeLastname');
+Route::post('/change_address', 'AppController@changeAddress');
+Route::post('/check_password', 'AppController@checkPassword');
+
+Route::get('/new_products', 'ProductsController@newProducts');
+
+Route::post('/change_quantity', 'CartsController@changeQuantity');
+Route::get('/get_most_popular', 'ProductsController@getMostPopular');
+Route::get('/search_by_category/{id}', 'ProductsController@searchByCategory');
+
+Route::get('/get_user_data/{id}', 'MessagesController@getUserData');
+Route::get('/get_message_history/{id}', 'MessagesController@getMessageHistory');

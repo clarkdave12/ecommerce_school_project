@@ -55,4 +55,18 @@ class MessagesController extends Controller
 
         return $users;
     }
+
+    public function getUserData($id)
+    {
+        return User::find($id);
+    }
+
+    public function getMessageHistory($id)
+    {
+        return DB::table('messages')
+                    ->select('messages.id', 'messages.sender', 'messages.receiver', 'messages.message')
+                    ->where('sender', '=', $id)
+                    ->orWhere('receiver', '=', $id)
+                    ->get();
+    }
 }

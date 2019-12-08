@@ -20,12 +20,13 @@ import ProfileCreate from './pages/ProfileCreate.vue';
 import UserFeedback from './pages/UserFeedback.vue';
 import Message from './pages/Message.vue';
 import Builder from './builder/Builder.vue';
-import Contact from './pages/Contact.vue';
+import Contact from './pages/MessageComponents/Mobile/AdminContacts.vue';
 import Success from './pages/SuccessfulPayment.vue';
 import History from './pages/History.vue';
 import OrderDetails from './admin/pages/OrderDetails.vue';
 import ForgotPassword from './pages/ForgotPassword.vue';
 import ResetPassword from './pages/ResetPassword.vue';
+import ChangeProfile from './pages/ChangeProfile.vue';
 
 export const routes = [
     /* For Admin */
@@ -153,5 +154,10 @@ export const routes = [
         path: '/reset_password',
         component: ResetPassword,
         meta: { forGuest: true }
+    },
+    {
+        path: '/change_profile',
+        component: ChangeProfile,
+        meta: { forUser: true }
     }
 ]
