@@ -2,7 +2,7 @@
     <v-container>
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-6">
-                <img :src="'http://localhost:8000/' + product.image">
+                <img :src="'http://bsupctech.epizy.com/' + product.image">
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6">
                 <h3><strong> {{ product.name }} </strong></h3>
@@ -38,7 +38,7 @@ export default {
     },
 
     created() {
-        axios.get('http://localhost:8000/api/products/' + this.$route.params.product_id)
+        axios.get('http://bsupctech.epizy.com/api/products/' + this.$route.params.product_id)
             .then(response => {
                 this.product = response.data.product
 
@@ -47,7 +47,7 @@ export default {
                 console.lgo(error.response)
             })
 
-        axios.get('http://localhost:8000/api/shipping_info/' + this.$route.params.user_id)
+        axios.get('http://bsupctech.epizy.com/api/shipping_info/' + this.$route.params.user_id)
             .then(response => {
                 this.user = response.data
             })

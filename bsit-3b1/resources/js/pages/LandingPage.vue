@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-lg-7 col-sm-12 mt-3" id="rightside">
-                <img src="http://localhost:8000/images/mod-bg.jpg" alt="">
+                <img src="http://bsupctech.epizy.com/images/mod-bg.jpg" alt="">
             </div>
         </div>
         

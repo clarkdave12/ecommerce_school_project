@@ -3,7 +3,7 @@
         <div class="row hidden-sm-and-down" id="header-box">
             <div>
                 <v-avatar size="100px" class="ml-8 mt-5">
-                    <img src="http://localhost:8000/images/monitor.jpeg" alt="">
+                    <img src="http://bsupctech.epizy.com/images/monitor.jpeg" alt="">
                 </v-avatar>
             </div>
             <div class="pt-8 ml-4">
@@ -21,7 +21,7 @@
         <!-- Mobile view -->
         <v-list-item class="hidden-md-and-up">
                 <v-list-item-avatar>
-                    <img src="http://localhost:8000/images/monitor.jpeg" alt="">
+                    <img src="http://bsupctech.epizy.com/images/monitor.jpeg" alt="">
                 </v-list-item-avatar>
                 <v-list-item-content>
                     <v-list-item-title v-text="profileInfo.first_name + ' ' + profileInfo.last_name"></v-list-item-title>
@@ -46,7 +46,7 @@
         <div class="row">
             <div class="col-sm-4 col-md-2 col-lg-2" v-for="history in histories" :key="history.id">
                 <v-card dark>
-                    <img class="images" :src="'http://localhost:8000/' + history.image" :alt="history.name">
+                    <img class="images" :src="'http://bsupctech.epizy.com/' + history.image" :alt="history.name">
                     <v-card-title>
                         {{ history.name }}
                     </v-card-title>

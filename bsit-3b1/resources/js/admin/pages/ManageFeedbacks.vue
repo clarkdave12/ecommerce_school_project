@@ -4,7 +4,7 @@
         <div v-for="feedback in feedbacks" :key="feedback.id" class="row">
             <div class="col-lg-6 col-sm-12">
                 <div class="image-frame">
-                    <img :src="'http://localhost:8000/' + feedback.image" alt="">
+                    <img :src="'http://bsupctech.epizy.com/' + feedback.image" alt="">
                 </div>
             </div>
              <span> {{ feedback.name }} </span>

@@ -4,7 +4,7 @@
         <div v-for="fb in userFeedbacks" :key="fb.id" class="row">
             <div class="col-lg-6 col-sm-12">
                 <div class="image-frame">
-                    <img :src="'http://localhost:8000/' + fb.image" alt="">
+                    <img :src="'http://bsupctech.epizy.com/' + fb.image" alt="">
                     <h3> {{ fb.name }} </h3>
                 </div>
             </div>

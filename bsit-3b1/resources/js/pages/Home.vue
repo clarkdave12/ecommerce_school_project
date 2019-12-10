@@ -22,7 +22,7 @@
         <div class="row" v-if="!search && !showSearchedProducts">
             <div class="col-sm-6 col-md-4 col-lg-3" v-for="np in newProducts" :key="np.id" @click="gotoDetails(np.id)">
                 <div class="hot-box">
-                    <img :src="'http://localhost:8000/' + np.image" :alt="np.name" class="hot-image">
+                    <img :src="'http://bsupctech.epizy.com/' + np.image" :alt="np.name" class="hot-image">
                     <div class="hot-content">
                         <div class="hot-text">
                             <v-card-title> {{ np.name }} </v-card-title>
@@ -44,7 +44,7 @@
         <div class="row" v-if="!search && !showSearchedProducts">
             <div class="col-sm-6 col-md-4 col-lg-3" v-for="p in popularProducts" :key="p.id">
                 <v-card dark>
-                    <img class="popular-image" :src="'http://localhost:8000/' + p.image" alt="">
+                    <img class="popular-image" :src="'http://bsupctech.epizy.com/' + p.image" alt="">
                     <v-card-title>
                         {{ p.name }}
                     </v-card-title>
@@ -64,7 +64,7 @@
         <div class="row" v-if="!search && !showSearchedProducts">
             <div class="col-sm-4 col-md-3 col-lg-2" v-for="category in categories" :key="category.id">
                 <v-card dark @click="searchByCategory(category.id)">
-                    <img class="category-image" :src="'http://localhost:8000/' + category.image" :alt="category.name">
+                    <img class="category-image" :src="'http://bsupctech.epizy.com/' + category.image" :alt="category.name">
                     <v-card-title>
                         {{category.name}}
                     </v-card-title>
@@ -81,7 +81,7 @@
         <div class="row">
             <div class="col-sm-6 col-md-4 col-lg-3" v-for="product in products" :key="product.id">
                 <v-card dark class="product-card">
-                    <img @click="gotoDetails(product.id)" height="200" class="product-image" :src="'http://localhost:8000/' + product.image">
+                    <img @click="gotoDetails(product.id)" height="200" class="product-image" :src="'http://bsupctech.epizy.com/' + product.image">
 
                     <v-card-title>
                         <router-link class="product-name" :to="'/product_details/' + product.id" tag="span" style="cursor: pointer">
@@ -127,7 +127,7 @@
         <!-- Adding to Cart Modal -->
         <v-dialog dark v-model="isAddingToCart">
             <v-card>
-                <img :src="'http://localhost:8000/' + cart.image" :alt="cart.name">
+                <img :src="'http://bsupctech.epizy.com/' + cart.image" :alt="cart.name">
 
                 <v-card-title> {{ cart.name }} </v-card-title>
 

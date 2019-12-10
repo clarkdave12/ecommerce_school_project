@@ -21,7 +21,7 @@
            <div class="row">
                <div class="col-sm-12 col-md-6 col-lg-4">
                     <v-card dark v-for="product in products" :key="product.id">
-                        <img :src="'http://localhost:8000/' + product.image" alt="">
+                        <img :src="'http://bsupctech.epizy.com/' + product.image" alt="">
                         <v-card-title> {{ product.name }} </v-card-title>
                         <v-card-text><strong>Price: </strong> PHP {{ product.price }} </v-card-text>
                     </v-card>
@@ -74,7 +74,7 @@ export default {
     methods: {
         showProduct(order_id) {
 
-            axios.get('http://localhost:8000/api/get_history_products/' + order_id)
+            axios.get('http://bsupctech.epizy.com/api/get_history_products/' + order_id)
                 .then(response => {
                     this.show = true
                     this.products = response.data

@@ -2,7 +2,7 @@
     <div>
         <div class="row line hidden-sm-and-down" v-for="cart in carts" :key="cart.id">
             <div class="col-sm-4 col-md-3 col-lg-3 image-container">
-                <img class="cart-images" :src="'http://localhost:8000/' + cart.image" alt="cart.name">
+                <img class="cart-images" :src="'http://bsupctech.epizy.com/' + cart.image" alt="cart.name">
             </div>
             <div class="col-sm-3 col-md-2 col-lg-2">
                 <h3><strong class="product-name">{{ cart.name }}</strong></h3>
@@ -35,7 +35,7 @@
         <!-- Mobile View -->
         <div class="row mobile-row hidden-md-and-up" v-for="cart in carts" :key="cart.name">
             <div class="mobile-col">
-                <img class="cart-images" :src="'http://localhost:8000/' + cart.image" alt="">
+                <img class="cart-images" :src="'http://bsupctech.epizy.com/' + cart.image" alt="">
                 <div class="mt-2">
                     <v-text-field type="number" label="Quantity" v-model="cart.quantity" @blur="changeQuantity(cart.id, cart.quantity, cart.product_price)" dark></v-text-field>
                 </div>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <form :action="'http://localhost:8000/api/create-payment/' + user.id + '/' + totalAmount" method="post">
+                <form :action="'http://bsupctech.epizy.com/api/create-payment/' + user.id + '/' + totalAmount" method="post">
                     <v-btn type="submit" block color="primary">
                         checkout
                     </v-btn>
@@ -177,7 +177,7 @@ export default {
                 totalAmount: this.totalAmount
             }
 
-            axios.post('http://localhost:8000/api/create-payment', data)
+            axios.post('http://bsupctech.epizy.com/api/create-payment', data)
                 .then(response => {
                     console.log(response)
                 })

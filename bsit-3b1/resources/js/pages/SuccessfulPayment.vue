@@ -20,7 +20,7 @@ export default {
     
         this.$store.dispatch('USER_DATA')
             .then(() => {
-                axios.delete('http://localhost:8000/api/clear_cart/'+ this.user.id)
+                axios.delete('http://bsupctech.epizy.com/api/clear_cart/'+ this.user.id)
                     .then(response => {
                         console.log(response)
                     })

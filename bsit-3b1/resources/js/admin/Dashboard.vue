@@ -45,7 +45,7 @@ export default {
 
     methods: {
         getSales() {
-            axios.get('http://localhost:8000/api/get_sales/' + this.month + '/' + this.year)
+            axios.get('http://bsupctech.epizy.com/api/get_sales/' + this.month + '/' + this.year)
                 .then(response => {
                     this.sales = response.data
                 })

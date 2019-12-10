@@ -8,8 +8,8 @@
 
             <v-toolbar-title>
                 <!-- <router-link id="brand-name" to="/" tag="span"></router-link> -->
-                <img id="logo" class="hidden-md-and-down" src="http://localhost:8000/images/logo.png" alt="">
-                <img id="logomobile" class="hidden-sm-and-up" src="http://localhost:8000/images/logo.png" alt="">
+                <img id="logo" class="hidden-md-and-down" src="http://bsupctech.epizy.com/images/logo.png" alt="">
+                <img id="logomobile" class="hidden-sm-and-up" src="http://bsupctech.epizy.com/images/logo.png" alt="">
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -26,7 +26,7 @@
             <v-layout column align-center v-if="isAuth">
                 <v-flex class="mt-5">
                     <v-list-item-avatar size="80">
-                        <img src="http://localhost:8000/images/monitor.jpeg" alt="profile">
+                        <img src="http://bsupctech.epizy.com/images/monitor.jpeg" alt="profile">
                     </v-list-item-avatar>    
 
                     <p align-center class="white--text subheading mt-1">

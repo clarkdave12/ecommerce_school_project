@@ -29,7 +29,7 @@ export default {
     },
 
     created() {
-        axios.get('http://localhost:8000/api/getorders')
+        axios.get('http://bsupctech.epizy.com/api/getorders')
             .then(response => {
                 this.orders = response.data
             })

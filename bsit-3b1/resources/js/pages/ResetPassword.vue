@@ -33,7 +33,7 @@ export default {
                 code: window.localStorage.getItem('code')
             }
 
-            axios.post('http://localhost:8000/api/verify_code', data)
+            axios.post('http://bsupctech.epizy.com/api/verify_code', data)
                 .then(response => {
                     this.email = data.email
                 })
@@ -55,7 +55,7 @@ export default {
 
             if(this.password == this.passwordAgain) {
 
-                axios.post('http://localhost:8000/api/reset_password', data)
+                axios.post('http://bsupctech.epizy.com/api/reset_password', data)
                     .then(response => {
                         alert(response.data.success)
                     })

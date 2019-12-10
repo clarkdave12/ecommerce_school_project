@@ -3,7 +3,7 @@
         <v-row>
             <v-col sm="4">
                 <v-card>
-                    <img id="product-image" :src="'http://localhost:8000/' + product.image" :alt="product.name">
+                    <img id="product-image" :src="'http://bsupctech.epizy.com/' + product.image" :alt="product.name">
                 </v-card>
             </v-col>
             <v-col sm="8">

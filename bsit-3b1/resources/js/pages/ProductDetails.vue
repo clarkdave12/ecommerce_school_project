@@ -3,12 +3,12 @@
     <div>
         <div class="row hidden-sm-and-down" id="details-row">
             <div class="col-sm-12 col-md-5 col-lg-4">
-                <img :src="'http://localhost:8000/' + product.image" alt="">
+                <img :src="'http://bsupctech.epizy.com/' + product.image" alt="">
             </div>
             <div class="col-sm-12 col-md-1 col-lg-1" id="small-img">
-                <img class="s-img" :src="'http://localhost:8000/' + product.image" alt="">
-                <img class="s-img" :src="'http://localhost:8000/' + product.image" alt="">
-                <img class="s-img" :src="'http://localhost:8000/' + product.image" alt="">
+                <img class="s-img" :src="'http://bsupctech.epizy.com/' + product.image" alt="">
+                <img class="s-img" :src="'http://bsupctech.epizy.com/' + product.image" alt="">
+                <img class="s-img" :src="'http://bsupctech.epizy.com/' + product.image" alt="">
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6 ml-3">
                 <h3 class="product-name"> {{ product.name }} </h3>
@@ -40,7 +40,7 @@
         <div class="row hidden-md-and-up"> <!-- Mobile View -->
             <v-carousel hide-delimiters>
                 <v-carousel-item>
-                    <img :src="'http://localhost:8000/' + product.image" alt="">
+                    <img :src="'http://bsupctech.epizy.com/' + product.image" alt="">
                 </v-carousel-item>
             </v-carousel>
 
@@ -70,7 +70,7 @@
         <!-- Ordering Process-->
         <v-dialog max-width="600" v-model="isOrdering" dark>
             <v-card>
-                <img :src="'http://localhost:8000/' + product.image" :alt="product.name">
+                <img :src="'http://bsupctech.epizy.com/' + product.image" :alt="product.name">
 
                 <v-card-title> {{ product.name }} </v-card-title>
 
@@ -104,7 +104,7 @@
                         <div class="row">
                             <v-spacer></v-spacer>
                             <div class="col-sm-12 col-md-5 col-lg-4">
-                                <img :src="'http://localhost:8000/' + product.image" :alt="product.name">
+                                <img :src="'http://bsupctech.epizy.com/' + product.image" :alt="product.name">
                             </div>
                             <v-spacer></v-spacer>
                         </div>
@@ -134,7 +134,7 @@
                         <div class="row">
                             <v-spacer></v-spacer>
                             <div class="col-sm-12 col-md-5 col-lg-4">
-                                <img :src="'http://localhost:8000/' + product.image" :alt="product.name">
+                                <img :src="'http://bsupctech.epizy.com/' + product.image" :alt="product.name">
                             </div>
                             <v-spacer></v-spacer>
                         </div>

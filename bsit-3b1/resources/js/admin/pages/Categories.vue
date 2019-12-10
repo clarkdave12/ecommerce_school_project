@@ -13,7 +13,7 @@
             <v-flex xs12 sm6 md4 lg3 v-for="cat in categories" :key="cat.id">
                 
                 <v-card dark class="pa-3 ma-3">
-                    <img class="view-image" :src="'http://localhost:8000/' + cat.image" :alt="cat.name">
+                    <img class="view-image" :src="'http://bsupctech.epizy.com/' + cat.image" :alt="cat.name">
                     <v-card-text>
                         <div class="subheading white--text category-name"> {{ cat.name }} </div>
                     </v-card-text>

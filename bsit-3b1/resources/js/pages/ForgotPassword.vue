@@ -35,7 +35,7 @@ export default {
             const data = {
                 email: this.email
             }
-            axios.post('http://localhost:8000/api/send_code', data)
+            axios.post('http://bsupctech.epizy.com/api/send_code', data)
                 .then(() => {
                     this.hasCode = true
                 })
@@ -57,7 +57,7 @@ export default {
                 code: this.code
             }
 
-            axios.post('http://localhost:8000/api/verify_code', data)
+            axios.post('http://bsupctech.epizy.com/api/verify_code', data)
                 .then(() => {
                     window.localStorage.setItem('email', data.email)
                     window.localStorage.setItem('code', data.code)

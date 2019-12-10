@@ -84,7 +84,7 @@ export default {
 
         register () {
         
-            axios.post('http://localhost:8000/api/validate', this.user)
+            axios.post('http://bsupctech.epizy.com/api/validate', this.user)
                 .then(({data}) => {
                     if(data.success) {
                         this.signup()
